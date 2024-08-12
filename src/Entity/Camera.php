@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CameraRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: CameraRepository::class)]
 class Camera
@@ -16,8 +18,15 @@ class Camera
     #[ORM\Column(length: 255)]
     private ?string $modelName = null;
 
-    #[ORM\Column]
-    private ?int $brand_id = null;
+    #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'cameras')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Brand $brand = null;
+
+    #[ORM\OneToOne(targetEntity: Manual::class, mappedBy: 'camera', cascade: ['persist', 'remove'])]
+    private ?Manual $manual = null;
+
+    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'camera', cascade: ['persist', 'remove'])]
+    private Collection $photos;
 
     #[ORM\Column]
     private ?int $year = null;
@@ -30,6 +39,11 @@ class Camera
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoPath = null;
+
+    public function __construct()
+    {
+        $this->photos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -48,14 +62,56 @@ class Camera
         return $this;
     }
 
-    public function getBrandId(): ?int
+    public function getBrand(): ?Brand
     {
-        return $this->brand_id;
+        return $this->brand;
     }
 
-    public function setBrandId(int $brand_id): static
+    public function setBrand(?Brand $brand): static
     {
-        $this->brand_id = $brand_id;
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getManual(): ?Manual
+    {
+        return $this->manual;
+    }
+
+    public function setManual(?Manual $manual): static
+    {
+        $this->manual = $manual;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): static
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos->add($photo);
+            $photo->setCamera($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getCamera() === $this) {
+                $photo->setCamera(null);
+            }
+        }
 
         return $this;
     }

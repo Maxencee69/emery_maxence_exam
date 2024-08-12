@@ -13,8 +13,9 @@ class Photo
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
-    private ?Camera $camera_id = null;
+    #[ORM\ManyToOne(targetEntity: Camera::class, inversedBy: 'photos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Camera $camera = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoPath = null;
@@ -24,14 +25,14 @@ class Photo
         return $this->id;
     }
 
-    public function getCameraId(): ?Camera
+    public function getCamera(): ?Camera
     {
-        return $this->camera_id;
+        return $this->camera;
     }
 
-    public function setCameraId(?Camera $camera_id): static
+    public function setCamera(?Camera $camera): static
     {
-        $this->camera_id = $camera_id;
+        $this->camera = $camera;
 
         return $this;
     }
