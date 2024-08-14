@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}Hello IndexController!{% endblock %}
 
@@ -17,4 +17,39 @@
         <li>Your template at <code>/Users/maxenceemery/Desktop/Symfony/emery_maxence_exam/templates/index/index.html.twig</code></li>
     </ul>
 </div>
+{% endblock %} #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {{ parent() }} - Hello IndexController!
+{% endblock %}
+
+{% block body %}
+ <div class="hero" style="height: 75vh; background-image: url('{{ asset('images/border-cameras-assorted-film.jpg') }}'); background-size: cover; background-position: center;">
+
+
+  <div class="d-flex justify-content-center align-items-center h-100">
+    <div class="text-center text-white">
+     
+      <p class="lead">Trouvez toutes les informations à propos de votre appareil photo argentique</p>
+      <form class="row g-3 mt-4 justify-content-center">
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" class="form-control rounded-pill" placeholder="Recherchez un appareil photo" aria-label="Recherchez un appareil photo">
+            <button class="btn btn-primary rounded-pill ms-2" type="submit" style="background-color: #007bff;">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  {# <p>
+    <img src="{{ asset('images/morbid_angel.png') }}" alt="Mon image" style="max-width: 350px" />
+  </p> #}
+
+  
 {% endblock %}
