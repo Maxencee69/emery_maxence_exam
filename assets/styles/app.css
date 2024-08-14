@@ -1,3 +1,134 @@
-body {
+/* body {
     background-color: skyblue;
+} */
+.btn.btn-primary:hover {
+    border-color: #028a6a;
 }
+
+/* styles.css */
+
+/* Applique la couleur à tous les éléments textuels */
+body, h1, h2, h3, h4, h5, h6, p, span, a, li, div, button, input, textarea, label, strong, em {
+    color: #585c5e !important;
+}
+
+/* Couleur par défaut du texte du bouton */
+.btn.btn-outline-secondary {
+    color: #585c5e !important;
+    border-color: #585c5e;
+}
+
+/* Maintient le texte en blanc au survol et change la couleur de fond pour le bouton */
+.btn.btn-outline-secondary:hover {
+    color: #ffffff !important;
+    background-color: #028a6a !important; /* Change la couleur de fond au survol */
+    border-color: #028a6a !important; /* Change la couleur de la bordure au survol */
+}
+
+/* Change la couleur des liens de navigation au survol */
+.nav-link:hover {
+    color: #028a6a !important; /* Change la couleur du texte au survol */
+}
+
+/* Retirer le contour bleu par défaut du champ de saisie et du bouton lors du focus */
+input[type="text"]:focus,
+.btn.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(2, 138, 106, 0.5); /* Ajoute une ombre avec la couleur #028a6a */
+    border-color: #028a6a !important; /* Change la couleur de la bordure */
+}
+
+
+
+/* Applique la couleur de fond et de bordure du bouton */
+.btn.btn-primary {
+    background-color: #028a6a;
+    border-color: #028a6a;
+}
+
+/* Maintient la couleur de fond et de bordure lorsqu'il est cliqué (focus/active) */
+.btn.btn-primary:active {
+    background-color: #028a6a !important;
+    border-color: #028a6a !important;
+    box-shadow: none; /* Pas d'ombre supplémentaire au clic */
+}
+
+/* Applique la couleur verte au texte "Filmcameras" */
+.navbar-brand {
+    color: #028a6a !important;
+}
+
+/* Ajoute une ombre plus importante sous les cartes */
+.card.shadow-sm {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Change la couleur des noms des appareils photo au survol */
+.hover-green:hover {
+    color: #028a6a !important;
+}
+
+.footer {
+    background-color: #028a6a; /* Couleur de fond du footer */
+    color: #ffffff; /* Couleur de texte blanche pour tout le contenu du footer */
+    font-size: 14px; /* Taille de la police */
+    padding: 15px 0; /* Padding en haut et en bas */
+}
+
+.footer a,
+.footer span,
+.footer i { /* Appliquer la couleur blanche aux liens, spans et icônes */
+    color: #ffffff !important; /* Force la couleur blanche */
+}
+
+.footer a:hover,
+.footer-icons a:hover {
+    color: #585c5e; /* Couleur au survol (vous pouvez modifier cette couleur selon vos préférences) */
+}
+
+.footer-icons i {
+    font-size: 18px; /* Taille des icônes */
+}
+
+
+.footer-icons a:hover {
+    color: #585c5e; /* Change la couleur des icônes au survol (vous pouvez ajuster cette couleur si nécessaire) */
+}
+
+
+.footer .mx-2 {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.nav-item-large-gap {
+    margin-left: 10rem; /* Vous pouvez augmenter cette valeur pour plus d'espace */
+}
+
+.footer-text a {
+    text-decoration: none; /* Enlève le soulignage des liens */
+    color: #ffffff; /* Garde le texte en blanc */
+}
+
+.footer-text a:hover {
+    text-decoration: none; /* Assure que le soulignage ne réapparait pas au survol */
+    color: #585c5e; /* Change la couleur des liens au survol (facultatif) */
+}
+
+.footer-icons a::before, 
+.footer-icons a::after {
+    content: none; /* Retire tout contenu généré automatiquement */
+}
+
+.footer-icons a {
+    text-decoration: none; /* Assure qu'il n'y a pas de soulignement ou de tiret */
+    margin: 0 10px; /* Ajoute un espace régulier entre les icônes */
+    border: none; /* Retire toute bordure potentielle */
+}
+
+
+
+
+
+
+
