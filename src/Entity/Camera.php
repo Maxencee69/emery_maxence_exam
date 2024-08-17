@@ -40,6 +40,9 @@ class Camera
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoPath = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $manualPath = null; // Ajout du champ manualPath
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
@@ -86,9 +89,6 @@ class Camera
         return $this;
     }
 
-    /**
-     * @return Collection<int, Photo>
-     */
     public function getPhotos(): Collection
     {
         return $this->photos;
@@ -160,6 +160,18 @@ class Camera
     public function setPhotoPath(?string $photoPath): static
     {
         $this->photoPath = $photoPath;
+
+        return $this;
+    }
+
+    public function getManualPath(): ?string // Getter pour manualPath
+    {
+        return $this->manualPath;
+    }
+
+    public function setManualPath(?string $manualPath): static // Setter pour manualPath
+    {
+        $this->manualPath = $manualPath;
 
         return $this;
     }
