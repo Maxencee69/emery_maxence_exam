@@ -1,0 +1,13 @@
+{# templates/camera/card.html.twig #}
+
+<div class="col">
+    <div class="card h-100 shadow-sm">
+        <div class="card-img-top-container" style="height: 200px; overflow: hidden;">
+            <img src="{{ asset(camera.photoPath) }}" class="card-img-top" alt="{{ camera.modelName }}" style="object-fit: cover; height: 100%; width: 100%;">
+        </div>
+        <div class="card-footer text-center">
+            <h5 class="card-title hover-green">{{ camera.brand.name }} {{ camera.modelName }}</h5>
+            <a href="{{ path('camera_item', {'id': camera.id}) }}" class="btn btn-primary mt-2">Voir les détails</a>
+        </div>
+    </div>
+</div>
