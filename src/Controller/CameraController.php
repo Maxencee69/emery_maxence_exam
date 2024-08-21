@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Repository\CameraRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\CameraRepository;
 
 class CameraController extends AbstractController
 {
@@ -21,7 +21,7 @@ class CameraController extends AbstractController
         ]);
     }
 
-    #[Route('/camera/{id}', name: 'camera_item')]
+    #[Route('/camera/{id}', name: 'app_camera_show')]
     public function item(int $id, CameraRepository $cameraRepository): Response
     {
         // Récupérer l'appareil photo spécifique par son ID
@@ -32,9 +32,15 @@ class CameraController extends AbstractController
             throw $this->createNotFoundException('L\'appareil photo demandé n\'existe pas.');
         }
 
-        // Rendu du template avec les détails de l'appareil photo
+        $manualFilePath = $this->getParameter('kernel.project_dir') . '/public/camera_manuels/' . strtolower($camera->getModelName()) . 'manual.pdf';
+
+        if (!file_exists($manualFilePath)) {
+            $manualFilePath = null;
+        }
+
         return $this->render('camera/item.html.twig', [
             'camera' => $camera,
+            'manualFileExists' => $manualFilePath !== null
         ]);
     }
 }

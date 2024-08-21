@@ -89,3 +89,33 @@ input[type="text"]:focus,
 .nav-item.nav-item-large-gap {
     margin-left: 90px; 
 }
+
+.btn-details {
+    background-color: transparent; 
+    border: none; 
+    color: #000; 
+    padding: 0.5rem 1rem;
+    text-decoration: underline; 
+}
+
+.btn-details:hover {
+    color: #028a6a !important; 
+    text-decoration: underline; 
+}
+
+
+
+.btn-success {
+    color: #ffffff !important; 
+    background-color: #028a6a; 
+    border-color: #028a6a; 
+}
+
+.btn-success:hover {
+    color: #ffffff !important; 
+    background-color: #026d54; 
+    border-color: #026d54; 
+}
+
+
+

@@ -8,11 +8,15 @@
 
 {% block body %}
 
-
 <div class="container my-5">
+  
+  <h2 class="text-center mb-5 fw-normal" style="font-size: 2rem;">Catalogue d'appareils photo</h2>
+
   <div class="row row-cols-1 row-cols-md-4 g-4">
     {% for camera in cameras %}
-      {% include 'camera/card.html.twig' with {'camera': camera} %}
+      <div class="col mb-4"> 
+        {% include 'camera/card.html.twig' with {'camera': camera} %}
+      </div>
     {% endfor %}
   </div>
 </div>

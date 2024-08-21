@@ -35,24 +35,26 @@
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const videoPlayer = document.getElementById('videoPlayer');
-    const videos = [
-      "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
-      "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
-      "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
-      "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
-    ];
-    let currentVideoIndex = 0;
+{# {% block javascripts %} #}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videos = [
+            "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
+            "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
+            "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
+            "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
+        ];
+        let currentVideoIndex = 0;
 
-    videoPlayer.addEventListener('ended', function () {
-      currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-      videoPlayer.src = videos[currentVideoIndex];
-      videoPlayer.play();
+        videoPlayer.addEventListener('ended', function () {
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+            videoPlayer.src = videos[currentVideoIndex];
+            videoPlayer.play();
+        });
     });
-  });
-</script>
+  </script>
+{# {% endblock %} #}
 
 <div class="container my-5 text-center">
   <h2 style="font-size: 19px; font-weight: 400; color: inherit;">Nous sommes convaincus que vous trouverez votre bonheur dans notre catalogue d'appareils photo<br> constamment enrichi par notre communauté </h2>

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche par marques{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h2 class="text-center mb-5 fw-normal" style="font-size: 2rem;">Recherche par marques</h2>
+
+    
+    <div class="mb-4">
+        <input type="text" id="searchBar" class="form-control" placeholder="Recherchez une marque..." onkeyup="filterBrands()">
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4" id="brandList">
+        {% for brand in brands %}
+            <div class="col brand-card">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ brand.name }}</h4>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdown{{ brand.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                Voir les appareils photo
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdown{{ brand.id }}">
+                                {% for camera in brand.cameras %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('app_camera_show', { 'id': camera.id }) }}">
+                                            {{ camera.modelName }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li><span class="dropdown-item-text">Aucun appareil photo disponible</span></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function filterBrands() {
+            const searchInput = document.getElementById('searchBar').value.toLowerCase();
+            const brandCards = document.querySelectorAll('.brand-card');
+
+            brandCards.forEach(card => {
+                const brandName = card.querySelector('.card-title').innerText.toLowerCase();
+                if (brandName.includes(searchInput)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+{% endblock %}
