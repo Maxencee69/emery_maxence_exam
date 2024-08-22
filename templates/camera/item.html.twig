@@ -24,10 +24,73 @@
                 <li class="list-group-item"><strong>Année de sortie :</strong> {{ camera.year }}</li>
             </ul>
 
-           {% set manualFile = 'camera_manuels/' ~ camera.modelName|lower ~ 'manual.pdf' %}
-            <a href="{{ asset(manualFile) }}" class="btn btn-success mt-4" download="{{ camera.modelName ~ 'manual.pdf' }}">
-                Télécharger le manuel
-            </a>
+            {# Code pour vérifier le modèle de la caméra et afficher le manuel correspondant #}
+            {% set manualFile = '' %}
+
+{# Vérifiez si la marque et le modèle correspondent #}
+{% if camera.getBrand() %}
+    {% set brandName = camera.getBrand().getName() %}
+
+    {% if brandName == 'Canon' %}
+        {% if camera.getModelName() == 'AE-1' %}
+            {% set manualFile = 'canonae1manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Contax' %}
+        {% if camera.getModelName() == 'T2' %}
+            {% set manualFile = 'contaxt2manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Hasselblad' %}
+        {% if camera.getModelName() == '503CW' %}
+            {% set manualFile = 'hasselbladmanual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Leica' %}
+        {% if camera.getModelName() == 'M6' %}
+            {% set manualFile = 'leicam6manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Mamiya' %}
+        {% if camera.getModelName() == '7' %}
+            {% set manualFile = 'mamiyam7manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Minolta' %}
+        {% if camera.getModelName() == 'X-300' %}
+            {% set manualFile = 'minoltax300manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Nikon' %}
+        {% if camera.getModelName() == 'FM2' %}
+            {% set manualFile = 'nikonfm2manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Olympus' %}
+        {% if camera.getModelName() == 'XA2' %}
+            {% set manualFile = 'olympusxa2manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Pentax' %}
+        {% if camera.getModelName() == 'K1000' %}
+            {% set manualFile = 'pentaxk1000manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Rollei' %}
+        {% if camera.getModelName() == '35' %}
+            {% set manualFile = 'rollei35manual.pdf' %}
+        {% endif %}
+    {% elseif brandName == 'Yashica' %}
+        {% if camera.getModelName() == 'T4' %}
+            {% set manualFile = 'yashicat4manual.pdf' %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% if manualFile %}
+    {# Code pour afficher ou utiliser le fichier du manuel #}
+{% endif %}
+
+
+            {% if manualFile %}
+    <a href="{{ asset('camera_manuels/' ~ manualFile) }}" class="btn btn-success mt-4" target="_blank">
+        Voir le manuel
+    </a>
+{% else %}
+    <p>Manuel non disponible</p>
+{% endif %}
+
         </div>
     </div>
 </div>
