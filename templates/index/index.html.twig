@@ -9,14 +9,15 @@
   <div class="d-flex justify-content-center align-items-center h-100">
     <div class="text-center text-white">
       <h1 class="lead" style="font-size: 22px; font-weight: 500;">Bienvenue dans notre catalogue d'appareils photo argentiques</h1>
-      <form class="row g-3 mt-4 justify-content-center">
-        <div class="col-md-8" style="max-width: 500px;"> 
-          <div class="input-group">
-            <input type="text" class="form-control rounded-pill" placeholder="Recherchez un appareil photo" aria-label="Recherchez un appareil photo" style="width: 85%;">
+      <form class="row g-3 mt-4 justify-content-center" onsubmit="return searchCameras(event)">
+        <div class="col-md-8" style="max-width: 500px; position: relative;"> 
+          <div class="input-group" style="width: 100%;">
+            <input type="text" id="cameraSearch" class="form-control rounded-pill" placeholder="Recherchez un appareil photo" aria-label="Recherchez un appareil photo" style="width: calc(100% - 50px);" oninput="suggestCameras()" autocomplete="off" value="">
             <button class="btn btn-primary rounded-pill ms-2" type="submit" style="background-color: #028a6a; border-color: #028a6a;">
               <i class="bi bi-search text-white"></i>
             </button>
           </div>
+          <ul id="suggestions" class="list-group position-absolute mt-1" style="width: calc(100% - 50px); display: none;"></ul>
         </div>
       </form>
     </div>
@@ -35,26 +36,52 @@
   </div>
 </div>
 
-{# {% block javascripts %} #}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const videoPlayer = document.getElementById('videoPlayer');
-        const videos = [
-            "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
-            "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
-            "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
-            "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
-        ];
-        let currentVideoIndex = 0;
+<script>
+    const cameras = [
+        {% for camera in cameras %}
+            { name: "{{ camera.modelName }}", brand: "{{ camera.brand.name }}", id: "{{ camera.id }}" },
+        {% endfor %}
+    ];
 
-        videoPlayer.addEventListener('ended', function () {
-            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-            videoPlayer.src = videos[currentVideoIndex];
-            videoPlayer.play();
-        });
-    });
-  </script>
-{# {% endblock %} #}
+    function suggestCameras() {
+        const query = document.getElementById('cameraSearch').value.toLowerCase();
+        const suggestions = document.getElementById('suggestions');
+        suggestions.innerHTML = '';
+        suggestions.style.display = 'none';
+
+        if (query.length > 0) {
+            const filteredCameras = cameras.filter(camera => camera.name.toLowerCase().includes(query) || camera.brand.toLowerCase().includes(query));
+            filteredCameras.forEach(camera => {
+                const suggestionItem = document.createElement('li');
+                suggestionItem.className = 'list-group-item';
+                suggestionItem.innerHTML = `${camera.brand} ${camera.name}`;
+                suggestionItem.onclick = () => {
+                    window.location.href = "{{ path('app_camera_show', { 'id': 'CAMERA_ID' }) }}".replace('CAMERA_ID', camera.id);
+                };
+                suggestions.appendChild(suggestionItem);
+            });
+            suggestions.style.display = 'block';
+            suggestions.style.width = document.getElementById('cameraSearch').offsetWidth + 'px';  
+        }
+    }
+
+    function searchCameras(event) {
+        event.preventDefault();
+        const query = document.getElementById('cameraSearch').value.toLowerCase();
+        const filteredCameras = cameras.filter(camera => camera.name.toLowerCase().includes(query) || camera.brand.toLowerCase().includes(query));
+
+        if (filteredCameras.length > 0) {
+            window.location.href = "{{ path('app_camera_show', { 'id': 'CAMERA_ID' }) }}".replace('CAMERA_ID', filteredCameras[0].id);
+        } else {
+            alert('Aucun appareil photo correspondant trouvé.');
+        }
+    }
+
+    
+    window.onload = function() {
+        document.getElementById('cameraSearch').value = '';
+    }
+</script>
 
 <div class="container my-5 text-center">
   <h2 style="font-size: 19px; font-weight: 400; color: inherit;">Nous sommes convaincus que vous trouverez votre bonheur dans notre catalogue d'appareils photo<br> constamment enrichi par notre communauté </h2>

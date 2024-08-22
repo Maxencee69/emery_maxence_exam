@@ -103,8 +103,6 @@ input[type="text"]:focus,
     text-decoration: underline; 
 }
 
-
-
 .btn-success {
     color: #ffffff !important; 
     background-color: #028a6a; 
@@ -117,5 +115,21 @@ input[type="text"]:focus,
     border-color: #026d54; 
 }
 
+.btn.btn-outline-secondary.green-border {
+    border-color: #028a6a !important;
+}
+
+#suggestions {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+#suggestions .list-group-item:hover {
+    background-color: #028a6a; 
+    color: #ffffff !important; 
+    cursor: pointer;
+}
 
 
