@@ -31,17 +31,30 @@
 <div class="container-fluid my-5 px-0">
   <div id="videoContainer" class="d-flex justify-content-center" style="height: 442px; width: 100%;">
     <video id="videoPlayer" class="d-block w-100 h-100" style="object-fit: cover;" autoplay muted>
-      <source src="{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}" type="video/mp4">
+      <source id="videoSource" src="{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}" type="video/mp4">
     </video>
   </div>
 </div>
 
 <script>
-    const cameras = [
-        {% for camera in cameras %}
-            { name: "{{ camera.modelName }}", brand: "{{ camera.brand.name }}", id: "{{ camera.id }}" },
-        {% endfor %}
+    const videoPaths = [
+        "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
+        "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
+        "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
+        "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
     ];
+    
+    let currentVideoIndex = 0;
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoSource = document.getElementById('videoSource');
+
+    videoPlayer.addEventListener('ended', function() {
+        // Passer à la vidéo suivante
+        currentVideoIndex = (currentVideoIndex + 1) % videoPaths.length;
+        videoSource.src = videoPaths[currentVideoIndex];
+        videoPlayer.load();
+        videoPlayer.play();
+    });
 
     function suggestCameras() {
         const query = document.getElementById('cameraSearch').value.toLowerCase();
@@ -77,7 +90,6 @@
         }
     }
 
-    
     window.onload = function() {
         document.getElementById('cameraSearch').value = '';
     }
