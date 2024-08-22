@@ -24,37 +24,12 @@
   </div>
 </div>
 
-<div class="container my-5 text-center">
-  <h2 style="font-size: 19px; font-weight: 400; color: inherit;">Capturez des instants précieux grâce à la magie de l'analogique</h2>
-</div>
-
-<div class="container-fluid my-5 px-0">
-  <div id="videoContainer" class="d-flex justify-content-center" style="height: 442px; width: 100%;">
-    <video id="videoPlayer" class="d-block w-100 h-100" style="object-fit: cover;" autoplay muted>
-      <source id="videoSource" src="{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}" type="video/mp4">
-    </video>
-  </div>
-</div>
-
 <script>
-    const videoPaths = [
-        "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
-        "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
-        "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
-        "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
+    const cameras = [
+        {% for camera in cameras %}
+            { name: "{{ camera.modelName }}", brand: "{{ camera.brand.name }}", id: "{{ camera.id }}" },
+        {% endfor %}
     ];
-    
-    let currentVideoIndex = 0;
-    const videoPlayer = document.getElementById('videoPlayer');
-    const videoSource = document.getElementById('videoSource');
-
-    videoPlayer.addEventListener('ended', function() {
-        // Passer à la vidéo suivante
-        currentVideoIndex = (currentVideoIndex + 1) % videoPaths.length;
-        videoSource.src = videoPaths[currentVideoIndex];
-        videoPlayer.load();
-        videoPlayer.play();
-    });
 
     function suggestCameras() {
         const query = document.getElementById('cameraSearch').value.toLowerCase();
@@ -90,9 +65,42 @@
         }
     }
 
+    
     window.onload = function() {
         document.getElementById('cameraSearch').value = '';
     }
+</script>
+
+
+<div class="container my-5 text-center">
+  <h2 style="font-size: 19px; font-weight: 400; color: inherit;">Capturez des instants précieux grâce à la magie de l'analogique</h2>
+</div>
+
+<div class="container-fluid my-5 px-0">
+  <div id="videoContainer" class="d-flex justify-content-center" style="height: 442px; width: 100%;">
+    <video id="videoPlayer" class="d-block w-100 h-100" style="object-fit: cover;" autoplay muted>
+      <source src="{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videos = [
+      "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
+      "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
+      "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
+      "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
+    ];
+    let currentVideoIndex = 0;
+
+    videoPlayer.addEventListener('ended', function () {
+      currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+      videoPlayer.src = videos[currentVideoIndex];
+      videoPlayer.play();
+    });
+  });
 </script>
 
 <div class="container my-5 text-center">
