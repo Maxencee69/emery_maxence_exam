@@ -48,6 +48,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        // Script pour filtrer les marques
         function filterBrands() {
             const searchInput = document.getElementById('searchBar').value.toLowerCase();
             const brandCards = document.querySelectorAll('.brand-card');

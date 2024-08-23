@@ -102,6 +102,25 @@
 
     clearButton.style.display = 'none';
   });
+
+  // Ajout de la gestion de la séquence des vidéos
+  const videoSources = [
+    "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
+    "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
+    "{{ asset('videos/1475770_Hobbies_People_1280x720.mp4') }}",
+    "{{ asset('videos/6037853_Person_People_1280x720.mp4') }}"
+  ];
+
+  let currentVideoIndex = 0;
+  const videoPlayer = document.getElementById('videoPlayer');
+
+  videoPlayer.addEventListener('ended', function() {
+    currentVideoIndex++;
+    if (currentVideoIndex < videoSources.length) {
+      videoPlayer.src = videoSources[currentVideoIndex];
+      videoPlayer.play();
+    }
+  });
 </script>
 
 <style>
