@@ -31,7 +31,7 @@ class Camera
     #[ORM\Column]
     private ?int $year = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "text")] // Changement du type à text pour les descriptions plus longues
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
@@ -41,7 +41,7 @@ class Camera
     private ?string $photoPath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $manualPath = null; // Ajout du champ manualPath
+    private ?string $manualPath = null; 
 
     public function __construct()
     {
@@ -107,7 +107,7 @@ class Camera
     public function removePhoto(Photo $photo): static
     {
         if ($this->photos->removeElement($photo)) {
-            // set the owning side to null (unless already changed)
+            
             if ($photo->getCamera() === $this) {
                 $photo->setCamera(null);
             }
@@ -164,12 +164,12 @@ class Camera
         return $this;
     }
 
-    public function getManualPath(): ?string // Getter pour manualPath
+    public function getManualPath(): ?string 
     {
         return $this->manualPath;
     }
 
-    public function setManualPath(?string $manualPath): static // Setter pour manualPath
+    public function setManualPath(?string $manualPath): static 
     {
         $this->manualPath = $manualPath;
 

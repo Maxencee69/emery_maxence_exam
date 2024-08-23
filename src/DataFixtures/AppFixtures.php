@@ -60,7 +60,6 @@ class AppFixtures extends Fixture
             ],
         ];
 
-        // --- BRANDS ----------------------------------------------
         foreach ($cameraPhotoMap as $brandName => $cameras) {
             $brand = new Brand();
             $brand->setName($brandName);
@@ -68,13 +67,16 @@ class AppFixtures extends Fixture
             $brands[$brandName] = $brand;
         }
 
-        // --- CAMERAS ----------------------------------------------
         foreach ($cameraPhotoMap as $brandName => $cameras) {
             foreach ($cameras as $cameraDetails) {
                 $camera = new Camera();
                 $camera->setModelName($cameraDetails['modelName']);
                 $camera->setYear($faker->year);
-                $camera->setDescription($faker->sentence());
+                
+                // Génération d'une description plus longue en concaténant deux paragraphes
+                $longDescription = $faker->paragraph(3) . "\n\n" . $faker->paragraph(3);
+                $camera->setDescription($longDescription);
+                
                 $camera->setFilmFormat($cameraDetails['filmFormat']);
                 $camera->setPhotoPath('/camera_photos/' . $cameraDetails['photo']);
                 $camera->setManualPath('/camera_manuels/' . $cameraDetails['manual']);
@@ -84,7 +86,6 @@ class AppFixtures extends Fixture
             }
         }
 
-        // --- USERS ----------------------------------------------
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
             $user->setName($faker->name());

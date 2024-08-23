@@ -64,7 +64,7 @@ class Brand
     public function removeCamera(Camera $camera): static
     {
         if ($this->cameras->removeElement($camera)) {
-            // set the owning side to null (unless already changed)
+            
             if ($camera->getBrand() === $this) {
                 $camera->setBrand(null);
             }

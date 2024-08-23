@@ -29,7 +29,7 @@
                                 {% for camera in brand.cameras %}
                                     <li>
                                         <a class="dropdown-item" href="{{ path('app_camera_show', { 'id': camera.id }) }}">
-                                            {{ camera.modelName }}
+                                            {{ brand.name }}  {{ camera.modelName }}
                                         </a>
                                     </li>
                                 {% else %}
@@ -48,7 +48,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        // Script pour filtrer les marques
+        
         function filterBrands() {
             const searchInput = document.getElementById('searchBar').value.toLowerCase();
             const brandCards = document.querySelectorAll('.brand-card');
@@ -63,7 +63,7 @@
             });
         }
 
-        // Effacer le contenu de la barre de recherche au chargement de la page
+        
         window.onload = function() {
             document.getElementById('searchBar').value = '';
         }

@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Méthodes pour UserInterface
+    
     public function getRoles(): array
     {
         return [$this->role];
@@ -93,11 +93,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si vous stockez des données sensibles temporaires, videz-les ici
+        
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->email;  // Ou retournez le nom d'utilisateur s'il est unique
+        return $this->email; 
     }
 }

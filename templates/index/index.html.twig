@@ -103,7 +103,6 @@
     clearButton.style.display = 'none';
   });
 
-  // Ajout de la gestion de la séquence des vidéos
   const videoSources = [
     "{{ asset('videos/1473811_Hobbies_People_1280x720.mp4') }}",
     "{{ asset('videos/1473814_People_Leisure_1280x720.mp4') }}",
@@ -116,10 +115,11 @@
 
   videoPlayer.addEventListener('ended', function() {
     currentVideoIndex++;
-    if (currentVideoIndex < videoSources.length) {
-      videoPlayer.src = videoSources[currentVideoIndex];
-      videoPlayer.play();
+    if (currentVideoIndex >= videoSources.length) {
+      currentVideoIndex = 0; 
     }
+    videoPlayer.src = videoSources[currentVideoIndex];
+    videoPlayer.play();
   });
 </script>
 
