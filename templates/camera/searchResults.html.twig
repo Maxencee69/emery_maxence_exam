@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Résultats de la recherche
+{% endblock %}
+
+{% block body %}
+<h1>Résultats de la recherche pour "{{ app.request.query.get('q') }}"</h1>
+
+{% if cameras is empty %}
+    <p>Aucun appareil photo trouvé.</p>
+{% else %}
+    <div class="container my-5">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for camera in cameras %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-img-top-container" style="height: 200px; overflow: hidden;">
+                        <img src="{{ asset(camera.photoPath) }}" class="card-img-top" alt="{{ camera.modelName }}" style="object-fit: cover; height: 100%; width: 100%;">
+                    </div>
+                    <div class="card-footer text-center">
+                        <h5 class="card-title hover-green">{{ camera.brand.name }} {{ camera.modelName }}</h5>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
