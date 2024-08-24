@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ camera is defined ? 'Modifier' : 'Créer' }} un appareil photo{% endblock %}
+
+{% block body %}
+    <h1>{{ camera is defined ? 'Modifier' : 'Créer' }} un appareil photo</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ camera is defined ? 'Mettre à jour' : 'Ajouter' }}</button>
+    {{ form_end(form) }}
+
+    {% if camera is defined %}
+        <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet appareil photo?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+            <button class="btn btn-danger">Supprimer</button>
+        </form>
+    {% endif %}
+{% endblock %}

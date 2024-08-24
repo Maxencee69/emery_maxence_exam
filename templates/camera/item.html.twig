@@ -82,6 +82,18 @@
             {% else %}
                 <p>Manuel non disponible</p>
             {% endif %}
+
+            <div class="mt-4">
+                <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-warning">Modifier cet appareil photo</a>
+            </div>
+
+            <div class="mt-2">
+                <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet appareil photo?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+                    <button class="btn btn-danger">Supprimer cet appareil photo</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

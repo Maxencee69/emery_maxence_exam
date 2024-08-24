@@ -15,7 +15,9 @@
   <div class="row row-cols-1 row-cols-md-4 g-4">
     {% for camera in cameras %}
       <div class="col mb-4"> 
-        {% include 'camera/card.html.twig' with {'camera': camera} %}
+        <a href="{{ path('app_camera_show', {'id': camera.id}) }}">
+          {% include 'camera/card.html.twig' with {'camera': camera} %}
+        </a>
       </div>
     {% endfor %}
   </div>

@@ -71,7 +71,8 @@
         suggestionItem.className = 'list-group-item';
         suggestionItem.innerHTML = `${camera.brand} ${camera.name}`;
         suggestionItem.onclick = () => {
-          window.location.href = "{{ path('app_camera_show', { 'id': 'CAMERA_ID' }) }}".replace('CAMERA_ID', camera.id);
+          const url = "{{ path('app_camera_show', { 'id': 0 }) }}".replace('/0', '/' + camera.id);
+          window.location.href = url;
         };
         suggestions.appendChild(suggestionItem);
       });
