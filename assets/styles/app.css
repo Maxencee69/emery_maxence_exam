@@ -159,6 +159,21 @@ input[type="text"]:focus,
     color: green !important; 
 }
 
+.card {
+    transition: transform 0.3s ease;
+}
 
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Désactiver le zoom au survol pour les cartes dans le conteneur .no-zoom */
+.no-zoom .card {
+    transition: none;
+}
+
+.no-zoom .card:hover {
+    transform: none;
+}
 
 
