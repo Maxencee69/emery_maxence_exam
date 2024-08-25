@@ -32,25 +32,7 @@ class CameraController extends AbstractController
         $form = $this->createForm(CameraType::class, $camera);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            dump('Form submitted'); // Vérification de la soumission du formulaire
-
-            if (!$form->isValid()) {
-                // Capturer et afficher les erreurs de validation pour chaque champ
-                foreach ($form->all() as $child) {
-                    if (!$child->isValid()) {
-                        foreach ($child->getErrors() as $error) {
-                            dump($child->getName() . ': ' . $error->getMessage());
-                        }
-                    }
-                }
-                dd('Form validation failed'); // Afficher un message indiquant que la validation a échoué
-            }
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            dd('Form is valid'); // Vérification de la validation du formulaire
-
             // Gestion de la marque
             $brandName = $form->get('brand')->getData();
             $brand = $brandRepository->findOneBy(['name' => $brandName]);
@@ -89,7 +71,6 @@ class CameraController extends AbstractController
 
             // Persist de la caméra avec la marque associée
             $entityManager->persist($camera);
-            dd($camera); // Debugging - Afficher l'état de la caméra juste avant le flush
             $entityManager->flush();
 
             return $this->redirectToRoute('appareils_photo_list');
@@ -106,7 +87,7 @@ class CameraController extends AbstractController
         $camera = $cameraRepository->find($id);
 
         if (!$camera) {
-            throw $this->createNotFoundException('L\'appareil photo demandé n\'existe pas.');
+            throw $this->createNotFoundException("L'appareil photo demandé n'existe pas.");
         }
 
         $manualFilePath = $this->getParameter('kernel.project_dir') . '/public/camera_manuels/' . strtolower($camera->getModelName()) . 'manual.pdf';
