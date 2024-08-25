@@ -18,6 +18,11 @@
                     </div>
 
                     <div class="mb-3">
+                        {{ form_label(form.brand, 'Marque', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.brand, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
                         {{ form_label(form.year, 'Année', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.year, {'attr': {'class': 'form-control'}}) }}
                     </div>

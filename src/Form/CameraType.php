@@ -11,11 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use App\Entity\Camera;
 
 class CameraType extends AbstractType
 {
-    private BrandToStringTransformer $brandToStringTransformer;
+    private $brandToStringTransformer;
 
     public function __construct(BrandToStringTransformer $brandToStringTransformer)
     {
@@ -43,7 +44,7 @@ class CameraType extends AbstractType
                 'placeholder' => 'Sélectionnez un format',
             ])
             ->add('brand', TextType::class, [
-                'label' => 'Marque',
+                'label' => 'Marque (sélectionnez ou saisissez une nouvelle)',
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de l\'appareil',
@@ -54,8 +55,19 @@ class CameraType extends AbstractType
                 'label' => 'Manuel de l\'appareil',
                 'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '10M', // Limite de taille augmentée à 10 MiB
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un fichier PDF valide',
+                    ])
+                ],
             ]);
 
+        // Appliquer le DataTransformer au champ 'brand'
         $builder->get('brand')
             ->addModelTransformer($this->brandToStringTransformer);
     }
