@@ -23,60 +23,8 @@
                 <li class="list-group-item"><strong>Année de sortie :</strong> {{ camera.year }}</li>
             </ul>
 
-            {% set manualFile = '' %}
-
-            {% if camera.getBrand() %}
-                {% set brandName = camera.getBrand().getName() %}
-
-                {% if brandName == 'Canon' %}
-                    {% if camera.getModelName() == 'AE-1' %}
-                        {% set manualFile = 'canonae1manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Contax' %}
-                    {% if camera.getModelName() == 'T2' %}
-                        {% set manualFile = 'contaxt2manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Hasselblad' %}
-                    {% if camera.getModelName() == '503CW' %}
-                        {% set manualFile = 'hasselbladmanual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Leica' %}
-                    {% if camera.getModelName() == 'M6' %}
-                        {% set manualFile = 'leicam6manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Mamiya' %}
-                    {% if camera.getModelName() == '7' %}
-                        {% set manualFile = 'mamiya7manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Minolta' %}
-                    {% if camera.getModelName() == 'X-300' %}
-                        {% set manualFile = 'minoltax300manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Nikon' %}
-                    {% if camera.getModelName() == 'FM2' %}
-                        {% set manualFile = 'nikonfm2manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Olympus' %}
-                    {% if camera.getModelName() == 'XA2' %}
-                        {% set manualFile = 'olympusxa2manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Pentax' %}
-                    {% if camera.getModelName() == 'K1000' %}
-                        {% set manualFile = 'pentaxk1000manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Rollei' %}
-                    {% if camera.getModelName() == '35' %}
-                        {% set manualFile = 'rollei35manual.pdf' %}
-                    {% endif %}
-                {% elseif brandName == 'Yashica' %}
-                    {% if camera.getModelName() == 'T4' %}
-                        {% set manualFile = 'yashicat4manual.pdf' %}
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-
-            {% if manualFile %}
-                <a href="{{ asset('camera_manuels/' ~ manualFile) }}" class="btn btn-success mt-4" target="_blank">
+            {% if camera.manualPath %}
+                <a href="{{ asset(camera.manualPath) }}" class="btn btn-success mt-4" target="_blank">
                     Voir le manuel
                 </a>
             {% else %}
@@ -84,17 +32,15 @@
             {% endif %}
 
             <div class="mt-4">
-    <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-light">Modifier cet appareil photo</a>
-</div>
+                <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-light">Modifier cet appareil photo</a>
+            </div>
 
-<div class="mt-2">
-    <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet appareil photo?');">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
-        <button class="btn btn-light">Supprimer cet appareil photo</button>
-    </form>
-</div>
-
-
+            <div class="mt-2">
+                <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet appareil photo?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+                    <button class="btn btn-light">Supprimer cet appareil photo</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

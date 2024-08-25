@@ -17,6 +17,11 @@
                         {{ form_widget(form.modelName, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
+                     <div class="mb-3">
+                        {{ form_label(form.brand, 'Marque', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.brand, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
                     <div class="mb-3">
                         {{ form_label(form.year, 'Année', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.year, {'attr': {'class': 'form-control'}}) }}
@@ -30,11 +35,6 @@
                     <div class="mb-3">
                         {{ form_label(form.filmFormat, 'Format du Film', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.filmFormat, {'attr': {'class': 'form-select'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.brand, 'Marque (sélectionnez ou saisissez une nouvelle)', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.brand, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">
