@@ -10,8 +10,8 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    {{ form_start(form) }}
-                    
+                    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+
                     <div class="mb-3">
                         {{ form_label(form.modelName, 'Nom du Modèle', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.modelName, {'attr': {'class': 'form-control'}}) }}
@@ -30,6 +30,11 @@
                     <div class="mb-3">
                         {{ form_label(form.filmFormat, 'Format du Film', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.filmFormat, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.brand, 'Marque (sélectionnez ou saisissez une nouvelle)', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.brand, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">

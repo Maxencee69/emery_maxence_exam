@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Camera;
+use App\Entity\Brand;
 use App\Form\CameraType;
+use App\Repository\BrandRepository;
 use App\Repository\CameraRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,23 +18,34 @@ class CameraController extends AbstractController
     #[Route('/appareils-photo', name: 'appareils_photo_list')]
     public function index(CameraRepository $cameraRepository): Response
     {
-        // Récupération de tous les appareils photo depuis le repository
         $cameras = $cameraRepository->findAll();
 
-        // Rendu du template avec la liste des appareils photo
         return $this->render('camera/cameraList.html.twig', [
             'cameras' => $cameras,
         ]);
     }
 
     #[Route('/camera/new', name: 'camera_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, BrandRepository $brandRepository): Response
     {
         $camera = new Camera();
         $form = $this->createForm(CameraType::class, $camera);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de la marque
+            $brand = $form->get('brand')->getData();
+            $newBrandName = $form->get('newBrand')->getData();
+
+            if ($newBrandName) {
+                $brand = new Brand();
+                $brand->setName($newBrandName);
+                $entityManager->persist($brand);
+            }
+
+            // Associer la caméra à la marque
+            $camera->setBrand($brand);
+
             // Gestion des fichiers photo
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
@@ -55,10 +68,15 @@ class CameraController extends AbstractController
                 $camera->setManualPath('/camera_manuels/' . $newFilename);
             }
 
+            // Debugging
+            dump($camera);
+            dump($camera->getBrand());
+            dd($form->getErrors(true, false));
+
+            // Persist de la caméra avec la marque associée
             $entityManager->persist($camera);
             $entityManager->flush();
 
-            // Redirection vers la liste après la création
             return $this->redirectToRoute('appareils_photo_list');
         }
 
@@ -70,10 +88,8 @@ class CameraController extends AbstractController
     #[Route('/camera/{id}', name: 'app_camera_show', requirements: ['id' => '\d+'])]
     public function item(int $id, CameraRepository $cameraRepository): Response
     {
-        // Récupérer l'appareil photo spécifique par son ID
         $camera = $cameraRepository->find($id);
 
-        // Vérifier si l'appareil photo existe
         if (!$camera) {
             throw $this->createNotFoundException('L\'appareil photo demandé n\'existe pas.');
         }
@@ -121,7 +137,6 @@ class CameraController extends AbstractController
 
             $entityManager->flush();
 
-            // Redirection après modification
             return $this->redirectToRoute('appareils_photo_list');
         }
 

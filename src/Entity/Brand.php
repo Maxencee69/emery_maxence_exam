@@ -64,12 +64,16 @@ class Brand
     public function removeCamera(Camera $camera): static
     {
         if ($this->cameras->removeElement($camera)) {
-            
             if ($camera->getBrand() === $this) {
                 $camera->setBrand(null);
             }
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }
