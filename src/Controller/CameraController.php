@@ -18,7 +18,7 @@ class CameraController extends AbstractController
     #[Route('/appareils-photo', name: 'appareils_photo_list')]
     public function index(CameraRepository $cameraRepository): Response
     {
-        $cameras = $cameraRepository->findAll();
+        $cameras = $cameraRepository->findBy([], ['id' => 'DESC']);
 
         return $this->render('camera/cameraList.html.twig', [
             'cameras' => $cameras,
@@ -33,13 +33,20 @@ class CameraController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion de la marque
-            $brandName = $form->get('brand')->getData();
-            $brand = $brandRepository->findOneBy(['name' => $brandName]);
+            // Normalisation du nom de la marque (trim, minuscules)
+            $brandName = trim($form->get('brand')->getData());
+            $normalizedBrandName = strtolower($brandName);
+
+            // Rechercher une marque existante avec un nom normalisé
+            $brand = $brandRepository->createQueryBuilder('b')
+                ->where('LOWER(TRIM(b.name)) = :brandName')
+                ->setParameter('brandName', $normalizedBrandName)
+                ->getQuery()
+                ->getOneOrNullResult();
 
             if (!$brand) {
                 $brand = new Brand();
-                $brand->setName($brandName);
+                $brand->setName($brandName); // Conserver le nom original avec la bonne casse
                 $entityManager->persist($brand);
                 $entityManager->flush(); // Sauvegarder la nouvelle marque dans la base de données
             }
@@ -73,7 +80,11 @@ class CameraController extends AbstractController
             $entityManager->persist($camera);
             $entityManager->flush();
 
-            return $this->redirectToRoute('appareils_photo_list');
+            // Ajouter un message flash de confirmation
+            $this->addFlash('success', 'L\'appareil photo a été ajouté avec succès.');
+
+            // Rester sur la même page du formulaire
+            return $this->redirectToRoute('camera_new');
         }
 
         return $this->render('camera/new.html.twig', [
@@ -143,11 +154,36 @@ class CameraController extends AbstractController
     }
 
     #[Route('/camera/{id}/delete', name: 'camera_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager, CameraRepository $cameraRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$camera->getId(), $request->request->get('_token'))) {
+            // Récupérer la marque avant de supprimer l'appareil photo
+            $brand = $camera->getBrand();
+
+            // Supprimer les fichiers associés
+            $photoPath = $camera->getPhotoPath();
+            $manualPath = $camera->getManualPath();
+
+            if ($photoPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$photoPath)) {
+                unlink($this->getParameter('kernel.project_dir').'/public'.$photoPath);
+            }
+
+            if ($manualPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$manualPath)) {
+                unlink($this->getParameter('kernel.project_dir').'/public'.$manualPath);
+            }
+
+            // Supprimer l'appareil photo
             $entityManager->remove($camera);
             $entityManager->flush();
+
+            // Vérifier si la marque n'a plus d'autres appareils associés
+            $remainingCameras = $cameraRepository->findBy(['brand' => $brand]);
+
+            if (empty($remainingCameras)) {
+                // Supprimer la marque si elle n'a plus d'appareils associés
+                $entityManager->remove($brand);
+                $entityManager->flush();
+            }
         }
 
         return $this->redirectToRoute('appareils_photo_list');
