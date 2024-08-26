@@ -33,11 +33,11 @@ class CameraController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Normalisation du nom de la marque (trim, minuscules)
+            
             $brandName = trim($form->get('brand')->getData());
             $normalizedBrandName = strtolower($brandName);
 
-            // Rechercher une marque existante avec un nom normalisé
+            
             $brand = $brandRepository->createQueryBuilder('b')
                 ->where('LOWER(TRIM(b.name)) = :brandName')
                 ->setParameter('brandName', $normalizedBrandName)
@@ -46,15 +46,15 @@ class CameraController extends AbstractController
 
             if (!$brand) {
                 $brand = new Brand();
-                $brand->setName($brandName); // Conserver le nom original avec la bonne casse
+                $brand->setName($brandName); 
                 $entityManager->persist($brand);
-                $entityManager->flush(); // Sauvegarder la nouvelle marque dans la base de données
+                $entityManager->flush(); 
             }
 
-            // Associer la caméra à la marque
+            
             $camera->setBrand($brand);
 
-            // Gestion des fichiers photo
+            
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -65,7 +65,7 @@ class CameraController extends AbstractController
                 $camera->setPhotoPath('/camera_photos/' . $newFilename);
             }
 
-            // Gestion des fichiers manuels
+            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -76,14 +76,14 @@ class CameraController extends AbstractController
                 $camera->setManualPath('/camera_manuels/' . $newFilename);
             }
 
-            // Persist de la caméra avec la marque associée
+            
             $entityManager->persist($camera);
             $entityManager->flush();
 
-            // Ajouter un message flash de confirmation
+            
             $this->addFlash('success', 'L\'appareil photo a été ajouté avec succès.');
 
-            // Rester sur la même page du formulaire
+            
             return $this->redirectToRoute('camera_new');
         }
 
@@ -120,7 +120,7 @@ class CameraController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion des fichiers photo
+            
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -131,7 +131,7 @@ class CameraController extends AbstractController
                 $camera->setPhotoPath('/camera_photos/' . $newFilename);
             }
 
-            // Gestion des fichiers manuels
+            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -157,10 +157,10 @@ class CameraController extends AbstractController
     public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager, CameraRepository $cameraRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$camera->getId(), $request->request->get('_token'))) {
-            // Récupérer la marque avant de supprimer l'appareil photo
+            
             $brand = $camera->getBrand();
 
-            // Supprimer les fichiers associés
+            
             $photoPath = $camera->getPhotoPath();
             $manualPath = $camera->getManualPath();
 
@@ -172,15 +172,15 @@ class CameraController extends AbstractController
                 unlink($this->getParameter('kernel.project_dir').'/public'.$manualPath);
             }
 
-            // Supprimer l'appareil photo
+            
             $entityManager->remove($camera);
             $entityManager->flush();
 
-            // Vérifier si la marque n'a plus d'autres appareils associés
+            
             $remainingCameras = $cameraRepository->findBy(['brand' => $brand]);
 
             if (empty($remainingCameras)) {
-                // Supprimer la marque si elle n'a plus d'appareils associés
+                
                 $entityManager->remove($brand);
                 $entityManager->flush();
             }

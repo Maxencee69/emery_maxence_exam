@@ -1,3 +1,4 @@
+/* Styles existants */
 .btn.btn-primary:hover {
     border-color: #028a6a;
 }
@@ -124,6 +125,17 @@ input[type="text"]:focus,
     max-width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    background-color: white; /* Fond blanc pour les suggestions */
+    border: 1px solid #ddd; /* Ajouter une bordure pour les suggestions */
+}
+
+#suggestions .list-group-item {
+    cursor: pointer;
+    padding: 8px 12px; /* Espacement interne */
+    color: #585c5e; /* Couleur du texte */
 }
 
 #suggestions .list-group-item:hover {
@@ -167,7 +179,6 @@ input[type="text"]:focus,
     transform: scale(1.05);
 }
 
-/* Désactiver le zoom au survol pour les cartes dans le conteneur .no-zoom */
 .no-zoom .card {
     transition: none;
 }
@@ -176,4 +187,66 @@ input[type="text"]:focus,
     transform: none;
 }
 
+/* Nouvelles règles CSS spécifiques à la page index */
 
+.hero {
+    height: 75vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.text-center .lead {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.col-md-8 {
+    max-width: 500px;
+    position: relative;
+}
+
+.input-group {
+    width: 100%;
+    position: relative;
+}
+
+.btn-clear {
+    color: #028a6a;
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+}
+
+#videoContainer {
+    height: 442px;
+    width: 100%;
+}
+
+#videoPlayer {
+    object-fit: cover;
+}
+
+.card-img-top-container {
+    height: 200px;
+    overflow: hidden;
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+.container h2 {
+    font-size: 19px !important;
+    font-weight: 400 !important;
+    color: inherit !important;
+    text-align: center;
+}
