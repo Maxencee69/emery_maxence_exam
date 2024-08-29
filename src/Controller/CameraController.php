@@ -144,7 +144,14 @@ class CameraController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('appareils_photo_list');
+            // Ajouter un message flash de succès
+            $this->addFlash('success', 'La caméra a été modifiée avec succès.');
+
+            // Retourner la vue sans redirection
+            return $this->render('camera/edit.html.twig', [
+                'form' => $form->createView(),
+                'camera' => $camera,
+            ]);
         }
 
         return $this->render('camera/edit.html.twig', [
