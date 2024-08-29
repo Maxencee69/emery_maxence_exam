@@ -244,9 +244,39 @@ input[type="text"]:focus,
     width: 100%;
 }
 
+/* Ancienne règle qui pouvait interférer */
 .container h2 {
     font-size: 19px !important;
-    font-weight: 400 !important;
-    color: inherit !important;
+    font-weight: 400; /* Ceci pouvait annuler vos styles pour rendre le texte gras */
+    color: inherit;
     text-align: center;
 }
+
+/* Assurez-vous que ces styles surmontent les règles par défaut de Bootstrap */
+.description-title, .caracteristiques-title {
+    font-size: 1.5rem; /* Taille plus grande pour les titres */
+    font-weight: 900; /* Gras accentué */
+    text-align: left; /* Alignement à gauche */
+    color: #000; /* Optionnel : force le texte à être noir pour plus de contraste */
+}
+
+.description-title {
+    margin-bottom: 0.5rem; /* Optionnel, ajuster l'espacement si nécessaire */
+}
+
+.caracteristiques-title {
+    margin-top: 1rem; /* Optionnel, ajuster l'espacement si nécessaire */
+}
+
+/* Assurez-vous que ces styles surmontent les règles par défaut de Bootstrap */
+.description-title, .caracteristiques-title {
+    font-size: 1.5rem !important; /* Taille plus grande pour les titres */
+    font-weight: 700 !important; /* Gras accentué */
+    text-align: left !important; /* Alignement à gauche */
+    color: #585c5e !important; /* Assurez-vous que la couleur est noire pour plus de contraste */
+    margin-bottom: 0.5rem !important; /* Ajuster l'espacement si nécessaire */
+}
+
+
+
+
