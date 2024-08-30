@@ -20,7 +20,7 @@ class BrandController extends AbstractController
     #[Route('/brand', name: 'app_brand')]
     public function index(): Response
     {
-        // Récupérer toutes les marques et les trier par ordre alphabétique
+        
         $brands = $this->entityManager->getRepository(Brand::class)->findBy([], ['name' => 'ASC']);
 
         return $this->render('brand/item.html.twig', [

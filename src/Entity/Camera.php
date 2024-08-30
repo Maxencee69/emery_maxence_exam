@@ -31,7 +31,7 @@ class Camera
     #[ORM\Column]
     private ?int $year = null;
 
-    #[ORM\Column(type: "text")] // Changement du type à text pour les descriptions plus longues
+    #[ORM\Column(type: "text")] 
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]

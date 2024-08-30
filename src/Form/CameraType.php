@@ -57,7 +57,7 @@ class CameraType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '10M', // Limite de taille augmentée à 10 MiB
+                        'maxSize' => '10M', 
                         'mimeTypes' => [
                             'application/pdf',
                             'application/x-pdf',
@@ -67,7 +67,7 @@ class CameraType extends AbstractType
                 ],
             ]);
 
-        // Appliquer le DataTransformer au champ 'brand'
+        
         $builder->get('brand')
             ->addModelTransformer($this->brandToStringTransformer);
     }

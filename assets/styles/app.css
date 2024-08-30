@@ -1,4 +1,3 @@
-/* Styles existants */
 .btn.btn-primary:hover {
     border-color: #028a6a;
 }
@@ -128,14 +127,14 @@ input[type="text"]:focus,
     display: none;
     position: absolute;
     z-index: 1000;
-    background-color: white; /* Fond blanc pour les suggestions */
-    border: 1px solid #ddd; /* Ajouter une bordure pour les suggestions */
+    background-color: white; 
+    border: 1px solid #ddd; 
 }
 
 #suggestions .list-group-item {
     cursor: pointer;
-    padding: 8px 12px; /* Espacement interne */
-    color: #585c5e; /* Couleur du texte */
+    padding: 8px 12px;
+    color: #585c5e; 
 }
 
 #suggestions .list-group-item:hover {
@@ -186,8 +185,6 @@ input[type="text"]:focus,
 .no-zoom .card:hover {
     transform: none;
 }
-
-/* Nouvelles règles CSS spécifiques à la page index */
 
 .hero {
     height: 75vh;
@@ -244,37 +241,35 @@ input[type="text"]:focus,
     width: 100%;
 }
 
-/* Ancienne règle qui pouvait interférer */
+
 .container h2 {
     font-size: 19px !important;
-    font-weight: 400; /* Ceci pouvait annuler vos styles pour rendre le texte gras */
+    font-weight: 400; 
     color: inherit;
     text-align: center;
 }
 
-/* Assurez-vous que ces styles surmontent les règles par défaut de Bootstrap */
 .description-title, .caracteristiques-title {
-    font-size: 1.5rem; /* Taille plus grande pour les titres */
-    font-weight: 900; /* Gras accentué */
-    text-align: left; /* Alignement à gauche */
-    color: #000; /* Optionnel : force le texte à être noir pour plus de contraste */
+    font-size: 1.5rem; 
+    font-weight: 900; 
+    text-align: left;
+    color: #000; 
 }
 
 .description-title {
-    margin-bottom: 0.5rem; /* Optionnel, ajuster l'espacement si nécessaire */
+    margin-bottom: 0.5rem; 
 }
 
 .caracteristiques-title {
-    margin-top: 1rem; /* Optionnel, ajuster l'espacement si nécessaire */
+    margin-top: 1rem; 
 }
 
-/* Assurez-vous que ces styles surmontent les règles par défaut de Bootstrap */
 .description-title, .caracteristiques-title {
-    font-size: 1.5rem !important; /* Taille plus grande pour les titres */
-    font-weight: 700 !important; /* Gras accentué */
-    text-align: left !important; /* Alignement à gauche */
-    color: #585c5e !important; /* Assurez-vous que la couleur est noire pour plus de contraste */
-    margin-bottom: 0.5rem !important; /* Ajuster l'espacement si nécessaire */
+    font-size: 1.5rem !important; 
+    font-weight: 700 !important; 
+    text-align: left !important; 
+    color: #585c5e !important; 
+    margin-bottom: 0.5rem !important; 
 }
 
 

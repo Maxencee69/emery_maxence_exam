@@ -144,10 +144,10 @@ class CameraController extends AbstractController
 
             $entityManager->flush();
 
-            // Ajouter un message flash de succès
+            
             $this->addFlash('success', 'La caméra a été modifiée avec succès.');
 
-            // Retourner la vue sans redirection
+            
             return $this->render('camera/edit.html.twig', [
                 'form' => $form->createView(),
                 'camera' => $camera,

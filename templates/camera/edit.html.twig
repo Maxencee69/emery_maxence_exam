@@ -6,7 +6,7 @@
 <div class="container my-5 no-zoom">
     <h1 class="text-center mb-4">{{ camera is defined ? 'Modifier' : 'Créer' }} un appareil photo</h1>
 
-    {# Affichage du message de succès #}
+    
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}

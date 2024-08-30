@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
                 $camera->setModelName($cameraDetails['modelName']);
                 $camera->setYear($faker->year);
                 
-                // Génération d'une description plus longue en concaténant deux paragraphes
+                
                 $longDescription = $faker->paragraph(3) . "\n\n" . $faker->paragraph(3);
                 $camera->setDescription($longDescription);
                 
@@ -86,16 +86,16 @@ class AppFixtures extends Fixture
             }
         }
 
-        for ($i = 0; $i < 10; $i++) {
-            $user = new User();
-            $user->setName($faker->name());
-            $user->setEmail($faker->email());
-            $user->setRole('ROLE_USER');
-            $hashedPassword = $this->passwordHasher->hashPassword($user, 'password');
-            $user->setPassword($hashedPassword);
+        // for ($i = 0; $i < 10; $i++) {
+        //     $user = new User();
+        //     $user->setName($faker->name());
+        //     $user->setEmail($faker->email());
+        //     $user->setRole('ROLE_USER');
+        //     $hashedPassword = $this->passwordHasher->hashPassword($user, 'password');
+        //     $user->setPassword($hashedPassword);
 
-            $manager->persist($user);
-        }
+        //     $manager->persist($user);
+        // }
 
         $manager->flush();
     }
