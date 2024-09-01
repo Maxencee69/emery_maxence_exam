@@ -17,28 +17,26 @@
     <div class="row row-cols-1 row-cols-md-2 g-4" id="brandList">
         {% for brand in brands %}
             <div class="col brand-card">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm padding-all-10">
                     <div class="card-body">
-                        <h4 class="card-title">{{ brand.name }}</h4>
-                      <div class="dropdown">
-    <button class="btn btn-success dropdown-toggle" type="button" id="dropdown{{ brand.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-        Voir les appareils photo
-    </button>
+                        <h4 class="card-title padding-left-10">{{ brand.name }}</h4>
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" id="dropdown{{ brand.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                Voir les appareils photo
+                            </button>
 
-    <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdown{{ brand.id }}">
-        {% for camera in brand.cameras %}
-            <li>
-                <a class="dropdown-camera" href="{{ path('app_camera_show', { 'id': camera.id }) }}">
-                    {{ brand.name }}  {{ camera.modelName }}
-                </a>
-            </li>
-        {% else %}
-            <li><span class="dropdown-camera-text">Aucun appareil photo disponible</span></li>
-        {% endfor %}
-    </ul>
-</div>
-
-
+                            <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdown{{ brand.id }}">
+                                {% for camera in brand.cameras %}
+                                    <li>
+                                        <a class="dropdown-camera padding-left-10" href="{{ path('app_camera_show', { 'id': camera.id }) }}">
+                                            {{ brand.name }}  {{ camera.modelName }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li><span class="dropdown-camera-text padding-left-10">Aucun appareil photo disponible</span></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

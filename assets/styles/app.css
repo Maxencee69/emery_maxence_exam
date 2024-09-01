@@ -355,6 +355,33 @@ select:focus {
     outline: none;
 }
 
+.custom-dropdown {
+    transform: translateX(-50px); /* Ajustez cette valeur pour déplacer le dropdown vers la gauche */
+}
+
+.padding-left-10 {
+    padding-left: 10px;
+}
+
+.padding-all-10 {
+    padding: 10px;
+}
+
+.custom-dropdown-container {
+    position: relative;
+}
+
+.custom-dropdown {
+    transform: translateX(-50px); /* Ajustez cette valeur pour déplacer le dropdown vers la gauche */
+}
+
+.bi-person {
+    margin-left: 5px; /* Ajout d'espace entre l'icône burger et l'icône utilisateur */
+}
+
+
+
+
 
 
 
