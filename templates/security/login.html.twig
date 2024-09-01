@@ -3,19 +3,19 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<div class="container my-5 no-zoom"> <!-- Déplacer la classe no-zoom ici -->
+<div class="container my-5 no-zoom">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" data-turbo="false"> 
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
 
                         {% if app.user %}
                             <div class="mb-3">
-                                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+                                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}" data-turbo="false">Déconnexion</a> 
                             </div>
 
                         {% endif %}

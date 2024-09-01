@@ -133,7 +133,11 @@
         <div class="card h-100 shadow-sm">
             <a href="{{ path('app_camera_show', { 'id': camera.id }) }}">
                 <div class="card-img-top-container">
-                    <img src="{{ asset(camera.photoPath) }}" class="card-img-top" alt="{{ camera.modelName }}">
+                    {% if camera.photos|length > 0 %}
+                        <img src="{{ asset(camera.photos|first.photoPath) }}" class="card-img-top" alt="{{ camera.modelName }}">
+                    {% else %}
+                        <img src="{{ asset('images/default-placeholder.png') }}" class="card-img-top" alt="{{ camera.modelName }}">
+                    {% endif %}
                 </div>
                 <div class="card-footer text-center">
                     <h5 class="card-title hover-green">{{ camera.brand.name }} {{ camera.modelName }}</h5>
@@ -144,5 +148,6 @@
     {% endfor %}
   </div>
 </div>
+
 
 {% endblock %}

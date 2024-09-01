@@ -66,15 +66,15 @@ class UserController extends AbstractController
         }
 
         if ($this->isCsrfTokenValid('delete_account'.$user->getId(), $request->request->get('_token'))) {
-            // Supprimez l'utilisateur de la base de données
+            
             $entityManager->remove($user);
             $entityManager->flush();
 
-            // Supprimer le jeton utilisateur pour déconnecter l'utilisateur
+            
             $tokenStorage->setToken(null);
             $request->getSession()->invalidate();
 
-            // Ajouter un message flash
+            
             $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
 
             return $this->redirectToRoute('app_login');

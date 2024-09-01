@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Camera;
 use App\Entity\Brand;
+use App\Entity\Photo;
+use App\Entity\Manual;
 use App\Form\CameraType;
 use App\Repository\BrandRepository;
 use App\Repository\CameraRepository;
@@ -56,6 +58,7 @@ class CameraController extends AbstractController
 
             $camera->setBrand($brand);
 
+            
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -63,9 +66,14 @@ class CameraController extends AbstractController
                     $this->getParameter('kernel.project_dir').'/public/camera_photos',
                     $newFilename
                 );
-                $camera->setPhotoPath('/camera_photos/' . $newFilename);
+
+                $photo = new Photo();
+                $photo->setCamera($camera);
+                $photo->setPhotoPath('/camera_photos/' . $newFilename);
+                $entityManager->persist($photo);
             }
 
+            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -73,7 +81,11 @@ class CameraController extends AbstractController
                     $this->getParameter('kernel.project_dir').'/public/camera_manuels',
                     $newFilename
                 );
-                $camera->setManualPath('/camera_manuels/' . $newFilename);
+
+                $manual = new Manual();
+                $manual->setCamera($camera);
+                $manual->setManualPath('/camera_manuels/' . $newFilename);
+                $entityManager->persist($manual);
             }
 
             $entityManager->persist($camera);
@@ -116,6 +128,7 @@ class CameraController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+           
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -123,9 +136,14 @@ class CameraController extends AbstractController
                     $this->getParameter('kernel.project_dir').'/public/camera_photos',
                     $newFilename
                 );
-                $camera->setPhotoPath('/camera_photos/' . $newFilename);
+
+                $photo = new Photo();
+                $photo->setCamera($camera);
+                $photo->setPhotoPath('/camera_photos/' . $newFilename);
+                $entityManager->persist($photo);
             }
 
+            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -133,7 +151,11 @@ class CameraController extends AbstractController
                     $this->getParameter('kernel.project_dir').'/public/camera_manuels',
                     $newFilename
                 );
-                $camera->setManualPath('/camera_manuels/' . $newFilename);
+
+                $manual = new Manual();
+                $manual->setCamera($camera);
+                $manual->setManualPath('/camera_manuels/' . $newFilename);
+                $entityManager->persist($manual);
             }
 
             $entityManager->flush();
@@ -158,38 +180,47 @@ class CameraController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$camera->getId(), $request->request->get('_token'))) {
             $brand = $camera->getBrand();
 
-            $photoPath = $camera->getPhotoPath();
-            $manualPath = $camera->getManualPath();
+            $photos = $camera->getPhotos();
+            $manual = $camera->getManual();
 
-            // Suppression des fichiers associés
-            if ($photoPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$photoPath)) {
-                unlink($this->getParameter('kernel.project_dir').'/public'.$photoPath);
+            
+            foreach ($photos as $photo) {
+                $photoPath = $photo->getPhotoPath();
+                if ($photoPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$photoPath)) {
+                    unlink($this->getParameter('kernel.project_dir').'/public'.$photoPath);
+                }
+                $entityManager->remove($photo);
             }
 
-            if ($manualPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$manualPath)) {
-                unlink($this->getParameter('kernel.project_dir').'/public'.$manualPath);
+            
+            if ($manual) {
+                $manualPath = $manual->getManualPath();
+                if ($manualPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$manualPath)) {
+                    unlink($this->getParameter('kernel.project_dir').'/public'.$manualPath);
+                }
+                $entityManager->remove($manual);
             }
 
             $entityManager->remove($camera);
             $entityManager->flush();
 
-            // Vérification s'il reste des caméras pour la marque
+            
             $remainingCameras = $cameraRepository->findBy(['brand' => $brand]);
 
-            // Suppression de la marque si elle n'a plus de caméras associées
+            
             if (empty($remainingCameras)) {
                 $entityManager->remove($brand);
                 $entityManager->flush();
             }
 
-            // Ajouter un message flash de succès
+            
             $this->addFlash('success', 'L\'appareil a été supprimé avec succès.');
 
-            // Rediriger vers la même page après suppression
+            
             return $this->redirect($request->headers->get('referer'));
         }
 
-        // En cas d'erreur, ajouter un message flash d'erreur
+        
         $this->addFlash('error', 'Échec de la suppression de l\'appareil.');
         return $this->redirect($request->headers->get('referer'));
     }

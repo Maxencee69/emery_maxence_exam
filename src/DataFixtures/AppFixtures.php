@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use App\Entity\Camera;
 use App\Entity\Brand;
+use App\Entity\Photo;
+use App\Entity\Manual;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -64,37 +66,7 @@ class AppFixtures extends Fixture
             $brands[$brandName] = $brand;
         }
 
-        foreach ($cameraPhotoMap as $brandName => $cameras) {
-            foreach ($cameras as $cameraDetails) {
-                $camera = new Camera();
-                $camera->setModelName($cameraDetails['modelName']);
-                $camera->setYear($faker->year);
-                
-                
-                $longDescription = $faker->paragraph(3) . "\n\n" . $faker->paragraph(3);
-                $camera->setDescription($longDescription);
-                
-                $camera->setFilmFormat($cameraDetails['filmFormat']);
-                $camera->setPhotoPath('/camera_photos/' . $cameraDetails['photo']);
-                $camera->setManualPath('/camera_manuels/' . $cameraDetails['manual']);
-                $camera->setBrand($brands[$brandName]);
-
-                $manager->persist($camera);
-            }
-        }
-
-        // for ($i = 0; $i < 10; $i++) {
-        //     $user = new User();
-        //     $user->setName($faker->name());
-        //     $user->setEmail($faker->email());
-        //     $user->setRole('ROLE_USER');
-        //     $hashedPassword = $this->passwordHasher->hashPassword($user, 'password');
-        //     $user->setPassword($hashedPassword);
-
-        //     $manager->persist($user);
-        // }
-
-                $regularUser = new User();
+        $regularUser = new User();
         $regularUser
             ->setEmail('bobby@bob.com')
             ->setPassword($this->hasher->hashPassword($regularUser, 'test'));
@@ -108,7 +80,32 @@ class AppFixtures extends Fixture
             ->setPassword($this->hasher->hashPassword($adminUser, 'test'));
 
         $manager->persist($adminUser);
-        
+
+        foreach ($cameraPhotoMap as $brandName => $cameras) {
+            foreach ($cameras as $cameraDetails) {
+                $camera = new Camera();
+                $camera->setModelName($cameraDetails['modelName']);
+                $camera->setYear($faker->year);
+                $camera->setDescription($faker->paragraph(3) . "\n\n" . $faker->paragraph(3));
+                $camera->setFilmFormat($cameraDetails['filmFormat']);
+                $camera->setBrand($brands[$brandName]);
+                $camera->setOwner($regularUser); 
+
+                $manager->persist($camera);
+
+                
+                $photo = new Photo();
+                $photo->setCamera($camera);
+                $photo->setPhotoPath('/camera_photos/' . $cameraDetails['photo']);
+                $manager->persist($photo);
+
+                
+                $manual = new Manual();
+                $manual->setCamera($camera);
+                $manual->setManualPath('/camera_manuels/' . $cameraDetails['manual']);
+                $manager->persist($manual);
+            }
+        }
 
         $manager->flush();
     }

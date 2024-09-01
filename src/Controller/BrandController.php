@@ -23,15 +23,15 @@ class BrandController extends AbstractController
         $brandRepository = $this->entityManager->getRepository(Brand::class);
         $brands = $brandRepository->findBy([], ['name' => 'ASC']);
 
-        // Supprimer les marques sans caméras associées
+        
         foreach ($brands as $brand) {
             if ($brand->getCameras()->isEmpty()) {
                 $this->entityManager->remove($brand);
             }
         }
-        $this->entityManager->flush(); // Effectuer les suppressions en base de données
+        $this->entityManager->flush(); 
 
-        // Récupérer à nouveau les marques après suppression
+       
         $brands = $brandRepository->findBy([], ['name' => 'ASC']);
 
         return $this->render('brand/camera.html.twig', [

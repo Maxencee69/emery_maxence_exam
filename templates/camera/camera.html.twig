@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="container my-5">
-    <!-- Affichage des messages de confirmation -->
+  
     <div id="flash-messages">
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
@@ -21,11 +21,15 @@
         {% endfor %}
     </div>
 
-    <!-- Contenu de la page -->
+    
     <div class="row">
         <div class="col-md-6 text-center">
             <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal">
-                <img src="{{ asset(camera.photoPath) }}" class="img-fluid" alt="{{ camera.modelName }}" style="max-width: 80%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                {% if camera.photos|length > 0 %}
+                    <img src="{{ asset(camera.photos|first.photoPath) }}" class="img-fluid" alt="{{ camera.modelName }}" style="max-width: 80%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                {% else %}
+                    <img src="{{ asset('images/default-placeholder.png') }}" class="img-fluid" alt="{{ camera.modelName }}" style="max-width: 80%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                {% endif %}
             </a>
         </div>
         <div class="col-md-6">
@@ -41,8 +45,8 @@
                 <li class="list-group-item"><strong>Année de sortie :</strong> {{ camera.year }}</li>
             </ul>
 
-            {% if camera.manualPath %}
-                <a href="{{ asset(camera.manualPath) }}" class="btn btn-success mt-4" target="_blank">
+            {% if camera.manual and camera.manual.manualPath %}
+                <a href="{{ asset(camera.manual.manualPath) }}" class="btn btn-success mt-4" target="_blank">
                     Voir le manuel
                 </a>
             {% else %}
@@ -65,16 +69,21 @@
     </div>
 </div>
 
-<!-- Modale pour afficher l'image en grande taille -->
+
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body p-0">
-                <!-- Ajout de la croix pour fermer la modale -->
+                
                 <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                <img src="{{ asset(camera.photoPath) }}" class="img-fluid w-100" alt="{{ camera.modelName }}" style="border-radius: 8px;">
+                {% if camera.photos|length > 0 %}
+                    <img src="{{ asset(camera.photos|first.photoPath) }}" class="img-fluid w-100" alt="{{ camera.modelName }}" style="border-radius: 8px;">
+                {% else %}
+                    <img src="{{ asset('images/default-placeholder.png') }}" class="img-fluid w-100" alt="{{ camera.modelName }}" style="border-radius: 8px;">
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

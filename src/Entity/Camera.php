@@ -18,30 +18,28 @@ class Camera
     #[ORM\Column(length: 255)]
     private ?string $modelName = null;
 
-    #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'cameras')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Brand $brand = null;
-
-    #[ORM\OneToOne(targetEntity: Manual::class, mappedBy: 'camera', cascade: ['persist', 'remove'])]
-    private ?Manual $manual = null;
-
-    #[ORM\OneToMany(targetEntity: Photo::class, mappedBy: 'camera', cascade: ['persist', 'remove'])]
-    private Collection $photos;
+    #[ORM\Column(length: 255)]
+    private ?string $filmFormat = null;
 
     #[ORM\Column]
     private ?int $year = null;
 
-    #[ORM\Column(type: "text")] 
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $filmFormat = null;
+    #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'cameras')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Brand $brand = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $photoPath = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cameras')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $manualPath = null; 
+    #[ORM\OneToMany(mappedBy: 'camera', targetEntity: Photo::class, cascade: ['persist', 'remove'])]
+    private Collection $photos;
+
+    #[ORM\OneToOne(mappedBy: 'camera', targetEntity: Manual::class, cascade: ['persist', 'remove'])]
+    private ?Manual $manual = null;
 
     public function __construct()
     {
@@ -65,53 +63,14 @@ class Camera
         return $this;
     }
 
-    public function getBrand(): ?Brand
+    public function getFilmFormat(): ?string
     {
-        return $this->brand;
+        return $this->filmFormat;
     }
 
-    public function setBrand(?Brand $brand): static
+    public function setFilmFormat(string $filmFormat): static
     {
-        $this->brand = $brand;
-
-        return $this;
-    }
-
-    public function getManual(): ?Manual
-    {
-        return $this->manual;
-    }
-
-    public function setManual(?Manual $manual): static
-    {
-        $this->manual = $manual;
-
-        return $this;
-    }
-
-    public function getPhotos(): Collection
-    {
-        return $this->photos;
-    }
-
-    public function addPhoto(Photo $photo): static
-    {
-        if (!$this->photos->contains($photo)) {
-            $this->photos->add($photo);
-            $photo->setCamera($this);
-        }
-
-        return $this;
-    }
-
-    public function removePhoto(Photo $photo): static
-    {
-        if ($this->photos->removeElement($photo)) {
-            
-            if ($photo->getCamera() === $this) {
-                $photo->setCamera(null);
-            }
-        }
+        $this->filmFormat = $filmFormat;
 
         return $this;
     }
@@ -133,45 +92,82 @@ class Camera
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getFilmFormat(): ?string
+    public function getBrand(): ?Brand
     {
-        return $this->filmFormat;
+        return $this->brand;
     }
 
-    public function setFilmFormat(string $filmFormat): static
+    public function setBrand(?Brand $brand): static
     {
-        $this->filmFormat = $filmFormat;
+        $this->brand = $brand;
 
         return $this;
     }
 
-    public function getPhotoPath(): ?string
+    public function getOwner(): ?User
     {
-        return $this->photoPath;
+        return $this->owner;
     }
 
-    public function setPhotoPath(?string $photoPath): static
+    public function setOwner(?User $owner): static
     {
-        $this->photoPath = $photoPath;
+        $this->owner = $owner;
 
         return $this;
     }
 
-    public function getManualPath(): ?string 
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
     {
-        return $this->manualPath;
+        return $this->photos;
     }
 
-    public function setManualPath(?string $manualPath): static 
+    public function addPhoto(Photo $photo): static
     {
-        $this->manualPath = $manualPath;
+        if (!$this->photos->contains($photo)) {
+            $this->photos[] = $photo;
+            $photo->setCamera($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            if ($photo->getCamera() === $this) {
+                $photo->setCamera(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getManual(): ?Manual
+    {
+        return $this->manual;
+    }
+
+    public function setManual(?Manual $manual): static
+    {
+        if ($manual === null && $this->manual !== null) {
+            $this->manual->setCamera(null);
+        }
+
+        if ($manual !== null && $manual->getCamera() !== $this) {
+            $manual->setCamera($this);
+        }
+
+        $this->manual = $manual;
 
         return $this;
     }

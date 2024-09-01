@@ -56,7 +56,7 @@ input[type="text"]:focus,
     color: #585c5e; 
     font-size: 14px; 
     padding: 15px 0; 
-    margin-top: auto; /* Ajouté pour fixer le footer en bas */
+    margin-top: auto; 
 }
 
 .footer .container {
@@ -356,7 +356,7 @@ select:focus {
 }
 
 .custom-dropdown {
-    transform: translateX(-50px); /* Ajustez cette valeur pour déplacer le dropdown vers la gauche */
+    transform: translateX(-50px); 
 }
 
 .padding-left-10 {
@@ -372,12 +372,25 @@ select:focus {
 }
 
 .custom-dropdown {
-    transform: translateX(-50px); /* Ajustez cette valeur pour déplacer le dropdown vers la gauche */
+    transform: translateX(-50px); 
 }
 
 .bi-person {
-    margin-left: 5px; /* Ajout d'espace entre l'icône burger et l'icône utilisateur */
+    margin-left: 5px; 
 }
+
+.btn.btn-danger {
+    background-color: #dc3545 !important; 
+    color: #ffffff !important; 
+    border-color: #dc3545 !important; 
+}
+
+.btn.btn-danger:hover {
+    background-color: #c82333 !important; 
+    color: #ffffff !important; 
+    border-color: #bd2130 !important; 
+}
+
 
 
 

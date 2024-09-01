@@ -60,13 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.message) {
-                    // Afficher le message de succès
+                    
                     var successMessage = document.createElement('div');
                     successMessage.className = 'alert alert-success';
                     successMessage.innerText = data.message;
                     document.getElementById('flash-messages').appendChild(successMessage);
 
-                    // Supprimer l'élément de la caméra supprimée
+                   
                     var cameraElement = this.closest('.camera-item');
                     if (cameraElement) {
                         cameraElement.remove();

@@ -57,7 +57,7 @@ class SecurityController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            // Rediriger vers la page de succès d'inscription
+           
             return $this->redirectToRoute('registration_success');
         }
 

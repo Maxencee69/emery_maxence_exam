@@ -30,10 +30,10 @@
             {% if app.user %}
                 <div class="btn-group custom-dropdown-container">
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i> <!-- Icône de menu burger -->
+                        <i class="bi bi-list"></i> 
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person ms-1" viewBox="0 0 16 16">
                             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 14s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H2z"/>
-                        </svg> <!-- Icône d'utilisateur -->
+                        </svg>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
                         {% if is_granted('ROLE_ADMIN') %}
@@ -42,19 +42,24 @@
                             <li><a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Se déconnecter</a>
+                            <form id="logout-form" action="{{ path('app_logout') }}" method="post" style="display: none;" data-turbo="false">
+                                <input type="hidden" name="_token" value="{{ csrf_token('logout') }}">
+                            </form>
+                        </li>
                     </ul>
                 </div>
             {% else %}
                 <div class="btn-group custom-dropdown-container">
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i> <!-- Icône de menu burger pour les visiteurs non connectés -->
+                        <i class="bi bi-list"></i> 
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person ms-1" viewBox="0 0 16 16">
                             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM2 14s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H2z"/>
-                        </svg> <!-- Icône d'utilisateur -->
+                        </svg> 
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end custom-dropdown">
-                        <li><a class="dropdown-item" href="{{ path('app_login') }}">Se connecter</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_login') }}" data-turbo="false">Se connecter</a></li>
                         <li><a class="dropdown-item" href="{{ path('app_register') }}">S'inscrire</a></li>
                     </ul>
                 </div>
