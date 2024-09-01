@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CameraController extends AbstractController
 {
@@ -26,18 +27,19 @@ class CameraController extends AbstractController
     }
 
     #[Route('/camera/new', name: 'camera_new')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function new(Request $request, EntityManagerInterface $entityManager, BrandRepository $brandRepository): Response
     {
         $camera = new Camera();
+        $camera->setOwner($this->getUser()); // Attribuer l'utilisateur connecté comme propriétaire
+
         $form = $this->createForm(CameraType::class, $camera);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $brandName = trim($form->get('brand')->getData());
             $normalizedBrandName = strtolower($brandName);
 
-            
             $brand = $brandRepository->createQueryBuilder('b')
                 ->where('LOWER(TRIM(b.name)) = :brandName')
                 ->setParameter('brandName', $normalizedBrandName)
@@ -51,10 +53,8 @@ class CameraController extends AbstractController
                 $entityManager->flush(); 
             }
 
-            
             $camera->setBrand($brand);
 
-            
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -65,7 +65,6 @@ class CameraController extends AbstractController
                 $camera->setPhotoPath('/camera_photos/' . $newFilename);
             }
 
-            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -76,14 +75,11 @@ class CameraController extends AbstractController
                 $camera->setManualPath('/camera_manuels/' . $newFilename);
             }
 
-            
             $entityManager->persist($camera);
             $entityManager->flush();
 
-            
             $this->addFlash('success', 'L\'appareil photo a été ajouté avec succès.');
 
-            
             return $this->redirectToRoute('camera_new');
         }
 
@@ -93,7 +89,7 @@ class CameraController extends AbstractController
     }
 
     #[Route('/camera/{id}', name: 'app_camera_show', requirements: ['id' => '\d+'])]
-    public function item(int $id, CameraRepository $cameraRepository): Response
+    public function camera(int $id, CameraRepository $cameraRepository): Response
     {
         $camera = $cameraRepository->find($id);
 
@@ -107,20 +103,25 @@ class CameraController extends AbstractController
             $manualFilePath = null;
         }
 
-        return $this->render('camera/item.html.twig', [
+        return $this->render('camera/camera.html.twig', [
             'camera' => $camera,
             'manualFileExists' => $manualFilePath !== null
         ]);
     }
 
     #[Route('/camera/{id}/edit', name: 'camera_edit', requirements: ['id' => '\d+'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function edit(Request $request, Camera $camera, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier que l'utilisateur est propriétaire ou admin
+        if ($camera->getOwner() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier cette caméra.');
+        }
+
         $form = $this->createForm(CameraType::class, $camera);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -131,7 +132,6 @@ class CameraController extends AbstractController
                 $camera->setPhotoPath('/camera_photos/' . $newFilename);
             }
 
-            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -144,10 +144,8 @@ class CameraController extends AbstractController
 
             $entityManager->flush();
 
-            
             $this->addFlash('success', 'La caméra a été modifiée avec succès.');
 
-            
             return $this->render('camera/edit.html.twig', [
                 'form' => $form->createView(),
                 'camera' => $camera,
@@ -161,13 +159,17 @@ class CameraController extends AbstractController
     }
 
     #[Route('/camera/{id}/delete', name: 'camera_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager, CameraRepository $cameraRepository): Response
     {
+        // Vérifier que l'utilisateur est propriétaire ou admin
+        if ($camera->getOwner() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de supprimer cette caméra.');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$camera->getId(), $request->request->get('_token'))) {
-            
             $brand = $camera->getBrand();
 
-            
             $photoPath = $camera->getPhotoPath();
             $manualPath = $camera->getManualPath();
 
@@ -179,15 +181,12 @@ class CameraController extends AbstractController
                 unlink($this->getParameter('kernel.project_dir').'/public'.$manualPath);
             }
 
-            
             $entityManager->remove($camera);
             $entityManager->flush();
 
-            
             $remainingCameras = $cameraRepository->findBy(['brand' => $brand]);
 
             if (empty($remainingCameras)) {
-                
                 $entityManager->remove($brand);
                 $entityManager->flush();
             }

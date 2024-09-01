@@ -23,7 +23,7 @@ class BrandController extends AbstractController
         
         $brands = $this->entityManager->getRepository(Brand::class)->findBy([], ['name' => 'ASC']);
 
-        return $this->render('brand/item.html.twig', [
+        return $this->render('brand/camera.html.twig', [
             'brands' => $brands,
         ]);
     }

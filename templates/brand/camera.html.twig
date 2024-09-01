@@ -28,12 +28,12 @@
     <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdown{{ brand.id }}">
         {% for camera in brand.cameras %}
             <li>
-                <a class="dropdown-item" href="{{ path('app_camera_show', { 'id': camera.id }) }}">
+                <a class="dropdown-camera" href="{{ path('app_camera_show', { 'id': camera.id }) }}">
                     {{ brand.name }}  {{ camera.modelName }}
                 </a>
             </li>
         {% else %}
-            <li><span class="dropdown-item-text">Aucun appareil photo disponible</span></li>
+            <li><span class="dropdown-camera-text">Aucun appareil photo disponible</span></li>
         {% endfor %}
     </ul>
 </div>

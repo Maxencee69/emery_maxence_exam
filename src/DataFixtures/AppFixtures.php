@@ -12,11 +12,8 @@ use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
-    private $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private UserPasswordHasherInterface $hasher)
     {
-        $this->passwordHasher = $passwordHasher;
     }
 
     public function load(ObjectManager $manager): void
@@ -96,6 +93,22 @@ class AppFixtures extends Fixture
 
         //     $manager->persist($user);
         // }
+
+                $regularUser = new User();
+        $regularUser
+            ->setEmail('bobby@bob.com')
+            ->setPassword($this->hasher->hashPassword($regularUser, 'test'));
+
+        $manager->persist($regularUser);
+
+        $adminUser = new User();
+        $adminUser
+            ->setEmail('admin@mycorp.com')
+            ->setRoles(['ROLE_ADMIN'])
+            ->setPassword($this->hasher->hashPassword($adminUser, 'test'));
+
+        $manager->persist($adminUser);
+        
 
         $manager->flush();
     }

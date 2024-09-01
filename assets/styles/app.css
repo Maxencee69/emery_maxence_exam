@@ -56,6 +56,7 @@ input[type="text"]:focus,
     color: #585c5e; 
     font-size: 14px; 
     padding: 15px 0; 
+    margin-top: auto; /* Ajouté pour fixer le footer en bas */
 }
 
 .footer .container {
@@ -86,7 +87,7 @@ input[type="text"]:focus,
     border: none; 
 }
 
-.nav-item.nav-item-large-gap {
+.nav-camera.nav-camera-large-gap {
     margin-left: 90px; 
 }
 
@@ -131,13 +132,13 @@ input[type="text"]:focus,
     border: 1px solid #ddd; 
 }
 
-#suggestions .list-group-item {
+#suggestions .list-group-camera {
     cursor: pointer;
     padding: 8px 12px;
     color: #585c5e; 
 }
 
-#suggestions .list-group-item:hover {
+#suggestions .list-group-camera:hover {
     background-color: #028a6a; 
     color: #ffffff !important; 
     cursor: pointer;
@@ -159,13 +160,13 @@ input[type="text"]:focus,
     border: none; 
 }
 
-.custom-dropdown-menu .dropdown-item {
+.custom-dropdown-menu .dropdown-camera {
     background-color: transparent !important; 
     color: black !important; 
 }
 
-.custom-dropdown-menu .dropdown-item:hover,
-.custom-dropdown-menu .dropdown-item:focus {
+.custom-dropdown-menu .dropdown-camera:hover,
+.custom-dropdown-menu .dropdown-camera:focus {
     background-color: transparent !important; 
     color: green !important; 
 }
@@ -222,7 +223,7 @@ input[type="text"]:focus,
 }
 
 #videoContainer {
-    height: 442px;
+    height: 500px;
     width: 100%;
 }
 
@@ -240,7 +241,6 @@ input[type="text"]:focus,
     height: 100%;
     width: 100%;
 }
-
 
 .container h2 {
     font-size: 19px !important;
@@ -270,6 +270,53 @@ input[type="text"]:focus,
     text-align: left !important; 
     color: #585c5e !important; 
     margin-bottom: 0.5rem !important; 
+}
+
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    flex: 1;
+}
+
+.form-control.custom-border {
+    border: 1px solid #028a6a !important;
+    box-shadow: 0 0 0 0.2rem rgba(2, 138, 106, 0.25);
+}
+
+.form-control.custom-border:focus {
+    border-color: #028a6a !important;
+    box-shadow: 0 0 0 0.2rem rgba(2, 138, 106, 0.5);
+}
+
+/* Désactive complètement l'effet de zoom sur les cartes */
+.no-zoom .card {
+    transition: none !important; /* Désactive toute transition */
+}
+
+.no-zoom .card:hover {
+    transform: none !important; /* Désactive le zoom au survol */
+}
+
+/* Mettre à jour le style du bouton pour correspondre au vert */
+.btn.btn-primary {
+    background-color: #028a6a !important; /* Appliquez votre vert personnalisé */
+    border-color: #028a6a !important;
+    color: #ffffff !important; /* Couleur du texte en blanc */
+}
+
+.btn.btn-primary:hover {
+    background-color: #026d54 !important; /* Un vert plus foncé pour le survol */
+    border-color: #026d54 !important;
 }
 
 
