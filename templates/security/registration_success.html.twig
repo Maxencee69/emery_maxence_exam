@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription réussie{% endblock %}
+
+{% block body %}
+<div class="container my-5 no-zoom">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="h3 mb-3 font-weight-normal">Inscription réussie</h1>
+                    <p>Votre inscription a été réalisée avec succès. Vous pouvez maintenant vous connecter.</p>
+                    <div class="d-grid">
+                        <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg">Se connecter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

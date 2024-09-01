@@ -1,0 +1,69 @@
+{# templates/admin/cameras.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des Caméras et Utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1>Administration des Caméras et Utilisateurs</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID Caméra</th>
+                <th>Modèle</th>
+                <th>Marque</th>
+                <th>ID Utilisateur</th>
+                <th>Email Utilisateur</th>
+                <th>Actions sur Caméra</th>
+                <th>Actions sur Utilisateur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                {% if user.cameras|length > 0 %}
+                    {% for camera in user.cameras %}
+                        <tr>
+                            <td>{{ camera.id }}</td>
+                            <td>{{ camera.modelName }}</td>
+                            <td>{{ camera.brand.name }}</td>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.getUserIdentifier() }}</td>
+                            <td>
+                                <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                                <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" style="display:inline-block;" onsubmit="return confirm('Voulez-vous vraiment supprimer cette caméra ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+                                    <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" style="display:inline-block;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ? Cela supprimera aussi toutes ses caméras.');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                    <button class="btn btn-sm btn-danger" type="submit">Supprimer Utilisateur</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+
+            {# Afficher les utilisateurs sans caméra #}
+            {% for user in usersWithoutCameras %}
+                <tr>
+                    <td colspan="3">Aucune caméra</td>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.getUserIdentifier() }}</td>
+                    <td></td> <!-- Pas d'actions sur caméra -->
+                    <td>
+                        <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" style="display:inline-block;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                            <button class="btn btn-sm btn-danger" type="submit">Supprimer Utilisateur</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

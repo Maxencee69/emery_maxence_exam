@@ -7,6 +7,7 @@ use App\Entity\Brand;
 use App\Form\CameraType;
 use App\Repository\BrandRepository;
 use App\Repository\CameraRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class CameraController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, BrandRepository $brandRepository): Response
     {
         $camera = new Camera();
-        $camera->setOwner($this->getUser()); // Attribuer l'utilisateur connecté comme propriétaire
+        $camera->setOwner($this->getUser());
 
         $form = $this->createForm(CameraType::class, $camera);
         $form->handleRequest($request);
@@ -88,32 +89,25 @@ class CameraController extends AbstractController
         ]);
     }
 
-    #[Route('/camera/{id}', name: 'app_camera_show', requirements: ['id' => '\d+'])]
+    #[Route('/camera/{id}', name: 'app_camera_show', requirements: ['id' => '\\d+'])]
     public function camera(int $id, CameraRepository $cameraRepository): Response
     {
         $camera = $cameraRepository->find($id);
 
         if (!$camera) {
-            throw $this->createNotFoundException("L'appareil photo demandé n'existe pas.");
-        }
-
-        $manualFilePath = $this->getParameter('kernel.project_dir') . '/public/camera_manuels/' . strtolower($camera->getModelName()) . 'manual.pdf';
-
-        if (!file_exists($manualFilePath)) {
-            $manualFilePath = null;
+            $this->addFlash('error', 'L\'appareil photo demandé n\'existe pas ou a été supprimé.');
+            return $this->redirectToRoute('appareils_photo_list');
         }
 
         return $this->render('camera/camera.html.twig', [
             'camera' => $camera,
-            'manualFileExists' => $manualFilePath !== null
         ]);
     }
 
-    #[Route('/camera/{id}/edit', name: 'camera_edit', requirements: ['id' => '\d+'])]
+    #[Route('/camera/{id}/edit', name: 'camera_edit', requirements: ['id' => '\\d+'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function edit(Request $request, Camera $camera, EntityManagerInterface $entityManager): Response
     {
-        // Vérifier que l'utilisateur est propriétaire ou admin
         if ($camera->getOwner() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier cette caméra.');
         }
@@ -145,11 +139,6 @@ class CameraController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'La caméra a été modifiée avec succès.');
-
-            return $this->render('camera/edit.html.twig', [
-                'form' => $form->createView(),
-                'camera' => $camera,
-            ]);
         }
 
         return $this->render('camera/edit.html.twig', [
@@ -158,11 +147,10 @@ class CameraController extends AbstractController
         ]);
     }
 
-    #[Route('/camera/{id}/delete', name: 'camera_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route('/camera/{id}/delete', name: 'camera_delete', methods: ['POST'], requirements: ['id' => '\\d+'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager, CameraRepository $cameraRepository): Response
     {
-        // Vérifier que l'utilisateur est propriétaire ou admin
         if ($camera->getOwner() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de supprimer cette caméra.');
         }
@@ -173,6 +161,7 @@ class CameraController extends AbstractController
             $photoPath = $camera->getPhotoPath();
             $manualPath = $camera->getManualPath();
 
+            // Suppression des fichiers associés
             if ($photoPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$photoPath)) {
                 unlink($this->getParameter('kernel.project_dir').'/public'.$photoPath);
             }
@@ -184,14 +173,45 @@ class CameraController extends AbstractController
             $entityManager->remove($camera);
             $entityManager->flush();
 
+            // Vérification s'il reste des caméras pour la marque
             $remainingCameras = $cameraRepository->findBy(['brand' => $brand]);
 
+            // Suppression de la marque si elle n'a plus de caméras associées
             if (empty($remainingCameras)) {
                 $entityManager->remove($brand);
                 $entityManager->flush();
             }
+
+            // Ajouter un message flash de succès
+            $this->addFlash('success', 'L\'appareil a été supprimé avec succès.');
+
+            // Rediriger vers la même page après suppression
+            return $this->redirect($request->headers->get('referer'));
         }
 
-        return $this->redirectToRoute('appareils_photo_list');
+        // En cas d'erreur, ajouter un message flash d'erreur
+        $this->addFlash('error', 'Échec de la suppression de l\'appareil.');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    #[Route('/admin/cameras', name: 'admin_cameras')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function adminCameras(CameraRepository $cameraRepository, UserRepository $userRepository): Response
+    {
+        $cameras = $cameraRepository->findAll(); 
+        $users = $userRepository->findAll();
+
+        $usersWithoutCameras = [];
+        foreach ($users as $user) {
+            if ($user->getCameras()->count() === 0) {
+                $usersWithoutCameras[] = $user;
+            }
+        }
+
+        return $this->render('admin/cameras.html.twig', [
+            'cameras' => $cameras,
+            'users' => $users,
+            'usersWithoutCameras' => $usersWithoutCameras,
+        ]);
     }
 }

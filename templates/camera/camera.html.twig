@@ -6,6 +6,22 @@
 
 {% block body %}
 <div class="container my-5">
+    <!-- Affichage des messages de confirmation -->
+    <div id="flash-messages">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Contenu de la page -->
     <div class="row">
         <div class="col-md-6 text-center">
             <img src="{{ asset(camera.photoPath) }}" class="img-fluid" alt="{{ camera.modelName }}" style="max-width: 80%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
@@ -39,7 +55,7 @@
                 <div class="mt-2">
                     <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet appareil photo?');">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
-                        <button class="btn btn-light">Supprimer cet appareil photo</button>
+                        <button type="submit" class="btn btn-light">Supprimer cet appareil photo</button>
                     </form>
                 </div>
             {% endif %}

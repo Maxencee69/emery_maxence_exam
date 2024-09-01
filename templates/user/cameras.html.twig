@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Caméras{% endblock %}
+
+{% block body %}
+<h1>Mes Caméras</h1>
+
+{% if cameras is empty %}
+    <p>Vous n'avez pas encore ajouté de caméras.</p>
+{% else %}
+    <ul>
+        {% for camera in cameras %}
+            <li class="camera-item">
+                {{ camera.name }} - 
+                <a href="{{ path('camera_edit', {'id': camera.id}) }}">Modifier</a> | 
+                <button class="delete-camera-button" data-url="{{ path('camera_delete', {'id': camera.id}) }}" data-token="{{ csrf_token('delete' ~ camera.id) }}">
+                    Supprimer
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<div id="flash-messages">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
+<hr>
+
+<form action="{{ path('user_delete_account') }}" method="post" 
+      onsubmit="return confirm('Voulez-vous vraiment supprimer votre compte ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete_account' ~ app.user.id) }}">
+    <button type="submit" class="btn btn-danger">Supprimer mon compte</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-camera-button').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            if (!confirm('Voulez-vous vraiment supprimer cette caméra ?')) {
+                return;
+            }
+
+            var url = this.getAttribute('data-url');
+            var token = this.getAttribute('data-token');
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: '_token=' + encodeURIComponent(token)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    // Afficher le message de succès
+                    var successMessage = document.createElement('div');
+                    successMessage.className = 'alert alert-success';
+                    successMessage.innerText = data.message;
+                    document.getElementById('flash-messages').appendChild(successMessage);
+
+                    // Supprimer l'élément de la caméra supprimée
+                    var cameraElement = this.closest('.camera-item');
+                    if (cameraElement) {
+                        cameraElement.remove();
+                    }
+                } else if (data.error) {
+                    alert('Erreur : ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+            });
+        });
+    });
+});
+</script>
+
+{% endblock %}

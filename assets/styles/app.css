@@ -298,26 +298,64 @@ body {
     box-shadow: 0 0 0 0.2rem rgba(2, 138, 106, 0.5);
 }
 
-/* Désactive complètement l'effet de zoom sur les cartes */
-.no-zoom .card {
-    transition: none !important; /* Désactive toute transition */
-}
 
-.no-zoom .card:hover {
-    transform: none !important; /* Désactive le zoom au survol */
-}
-
-/* Mettre à jour le style du bouton pour correspondre au vert */
 .btn.btn-primary {
-    background-color: #028a6a !important; /* Appliquez votre vert personnalisé */
+    background-color: #028a6a !important; 
     border-color: #028a6a !important;
-    color: #ffffff !important; /* Couleur du texte en blanc */
+    color: #ffffff !important; 
 }
 
 .btn.btn-primary:hover {
-    background-color: #026d54 !important; /* Un vert plus foncé pour le survol */
+    background-color: #026d54 !important; 
     border-color: #026d54 !important;
 }
+
+
+.no-zoom .card {
+    transition: none !important; 
+    transform: none !important;
+}
+
+.no-zoom .card:hover {
+    transform: none !important;
+}
+
+
+.container .no-zoom .card {
+    transition: none !important; 
+    transform: none !important;
+}
+
+.container .no-zoom .card:hover {
+    transform: none !important;
+}
+
+.btn-group:hover .dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 100%; 
+    margin-top: 0; 
+}
+
+.btn-group .dropdown-menu .dropdown-item:hover {
+    background-color: #028a6a; 
+    color: #ffffff !important; 
+}
+
+.btn-group .dropdown-toggle::after {
+    display: none; 
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus, 
+textarea:focus,
+select:focus {
+    border-color: #028a6a !important; 
+    box-shadow: 0 0 0 0.2rem rgba(2, 138, 106, 0.5) !important; 
+    outline: none;
+}
+
+
 
 
 

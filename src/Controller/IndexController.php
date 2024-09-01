@@ -12,10 +12,8 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_index')]
     public function index(CameraRepository $cameraRepository): Response
     {
-        
         $cameras = $cameraRepository->findAll();
 
-        
         return $this->render('index/index.html.twig', [
             'cameras' => $cameras,
         ]);

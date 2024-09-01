@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="container my-5 no-zoom">
+    <h1>Mon Profil</h1>
+    <p><strong>Email :</strong> {{ user.email }}</p>
+
+    <div id="flash-messages">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2>Modifier le mot de passe</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.oldPassword) }}
+                    {{ form_widget(form.oldPassword, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.newPassword) }}
+                    {{ form_widget(form.newPassword, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Mes Caméras</h2>
+    {% if cameras is empty %}
+        <p class="text-muted">Vous n'avez pas encore ajouté de caméras.</p>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID Caméra</th>
+                    <th>Modèle</th>
+                    <th>Marque</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for camera in cameras %}
+                    <tr class="camera-item">
+                        <td>{{ camera.id }}</td>
+                        <td>{{ camera.modelName }}</td>
+                        <td>{{ camera.brand.name }}</td>
+                        <td>
+                            <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                            <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette caméra ?');" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+                                <button class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <hr>
+
+    <h2>Supprimer mon compte</h2>
+    <div class="alert alert-danger">
+        <p>Attention : Cette action est irréversible. Supprimer votre compte entraînera la perte de toutes vos données.</p>
+        <form action="{{ path('user_delete_account') }}" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer votre compte ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_account' ~ app.user.id) }}">
+            <button type="submit" class="btn btn-danger">Supprimer mon compte</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
