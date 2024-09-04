@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Camera;
+use App\Repository\UserRepository;
 use App\Entity\Brand;
 use App\Entity\Photo;
 use App\Entity\Manual;
 use App\Form\CameraType;
 use App\Repository\BrandRepository;
 use App\Repository\CameraRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +58,6 @@ class CameraController extends AbstractController
 
             $camera->setBrand($brand);
 
-            
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -73,7 +72,6 @@ class CameraController extends AbstractController
                 $entityManager->persist($photo);
             }
 
-            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -120,15 +118,13 @@ class CameraController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function edit(Request $request, Camera $camera, EntityManagerInterface $entityManager): Response
     {
-        if ($camera->getOwner() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de modifier cette caméra.');
-        }
+        // Utilisation du voter pour vérifier l'accès
+        $this->denyAccessUnlessGranted('edit', $camera);
 
         $form = $this->createForm(CameraType::class, $camera);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-           
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $newFilename = uniqid().'.'.$photoFile->guessExtension();
@@ -143,7 +139,6 @@ class CameraController extends AbstractController
                 $entityManager->persist($photo);
             }
 
-            
             $manualFile = $form->get('manual')->getData();
             if ($manualFile) {
                 $newFilename = uniqid().'.'.$manualFile->guessExtension();
@@ -173,9 +168,8 @@ class CameraController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager, CameraRepository $cameraRepository): Response
     {
-        if ($camera->getOwner() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de supprimer cette caméra.');
-        }
+        // Utilisation du voter pour vérifier l'accès
+        $this->denyAccessUnlessGranted('delete', $camera);
 
         if ($this->isCsrfTokenValid('delete'.$camera->getId(), $request->request->get('_token'))) {
             $brand = $camera->getBrand();
@@ -183,7 +177,6 @@ class CameraController extends AbstractController
             $photos = $camera->getPhotos();
             $manual = $camera->getManual();
 
-            
             foreach ($photos as $photo) {
                 $photoPath = $photo->getPhotoPath();
                 if ($photoPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$photoPath)) {
@@ -192,7 +185,6 @@ class CameraController extends AbstractController
                 $entityManager->remove($photo);
             }
 
-            
             if ($manual) {
                 $manualPath = $manual->getManualPath();
                 if ($manualPath && file_exists($this->getParameter('kernel.project_dir').'/public'.$manualPath)) {
@@ -204,23 +196,18 @@ class CameraController extends AbstractController
             $entityManager->remove($camera);
             $entityManager->flush();
 
-            
             $remainingCameras = $cameraRepository->findBy(['brand' => $brand]);
 
-            
             if (empty($remainingCameras)) {
                 $entityManager->remove($brand);
                 $entityManager->flush();
             }
 
-            
             $this->addFlash('success', 'L\'appareil a été supprimé avec succès.');
 
-            
             return $this->redirect($request->headers->get('referer'));
         }
 
-        
         $this->addFlash('error', 'Échec de la suppression de l\'appareil.');
         return $this->redirect($request->headers->get('referer'));
     }

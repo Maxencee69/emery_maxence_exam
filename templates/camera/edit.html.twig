@@ -6,7 +6,6 @@
 <div class="container my-5 no-zoom">
     <h1 class="text-center mb-4">{{ camera is defined ? 'Modifier' : 'Créer' }} un appareil photo</h1>
 
-    
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
@@ -17,57 +16,61 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
-                    
-                    <div class="mb-3">
-                        {{ form_label(form.modelName, 'Nom du Modèle', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.modelName, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.brand, 'Marque', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.brand, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.year, 'Année', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.year, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.filmFormat, 'Format du Film', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.filmFormat, {'attr': {'class': 'form-select'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.photo, 'Photo de l\'appareil', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form_label(form.manual, 'Manuel de l\'appareil', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.manual, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-success btn-lg" type="submit">{{ camera is defined ? 'Mettre à jour' : 'Ajouter' }}</button>
-                    </div>
-
-                    {{ form_end(form) }}
-
-                    {% if camera is defined %}
-                        <hr>
-                        <div class="d-grid gap-2">
-                            <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirmDeletion();">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
-                                <button class="btn btn-danger btn-lg text-white" type="submit">Supprimer</button>
-                            </form>
+                    {% if is_granted('edit', camera) or camera is not defined %}
+                        {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+                        
+                        <div class="mb-3">
+                            {{ form_label(form.modelName, 'Nom du Modèle', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.modelName, {'attr': {'class': 'form-control'}}) }}
                         </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.brand, 'Marque', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.brand, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.year, 'Année', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.year, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.filmFormat, 'Format du Film', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.filmFormat, {'attr': {'class': 'form-select'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.photo, 'Photo de l\'appareil', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.manual, 'Manuel de l\'appareil', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.manual, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg" type="submit">{{ camera is defined ? 'Mettre à jour' : 'Ajouter' }}</button>
+                        </div>
+
+                        {{ form_end(form) }}
+
+                        {% if camera is defined %}
+                            <hr>
+                            <div class="d-grid gap-2">
+                                <form method="post" action="{{ path('camera_delete', {'id': camera.id}) }}" onsubmit="return confirmDeletion();">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camera.id) }}">
+                                    <button class="btn btn-danger btn-lg text-white" type="submit">Supprimer</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-danger">Vous n'avez pas la permission de modifier cet appareil photo.</div>
                     {% endif %}
                 </div>
             </div>
