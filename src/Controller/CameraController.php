@@ -41,7 +41,7 @@ class CameraController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $brandName = trim($form->get('brand')->getData());
-            $normalizedBrandName = strtolower($brandName);
+            $normalizedBrandName = ucfirst(strtolower($brandName));
 
             $brand = $brandRepository->createQueryBuilder('b')
                 ->where('LOWER(TRIM(b.name)) = :brandName')
