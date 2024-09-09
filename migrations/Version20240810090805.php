@@ -19,7 +19,7 @@ final class Version20240810090805 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // $this->addSql('CREATE TABLE brand (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE brand (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE camera (id INT AUTO_INCREMENT NOT NULL, model_name VARCHAR(255) NOT NULL, brand_id INT NOT NULL, year INT NOT NULL, description VARCHAR(255) NOT NULL, film_format VARCHAR(255) NOT NULL, photo_path VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE manual (id INT AUTO_INCREMENT NOT NULL, camera_id_id INT DEFAULT NULL, manual_path VARCHAR(255) DEFAULT NULL, format VARCHAR(255) DEFAULT NULL, INDEX IDX_10DBBEC4A47890 (camera_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE photo (id INT AUTO_INCREMENT NOT NULL, camera_id_id INT DEFAULT NULL, photo_path VARCHAR(255) DEFAULT NULL, INDEX IDX_14B78418A47890 (camera_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');

@@ -19,7 +19,7 @@ final class Version20240812153820 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        
         $this->addSql('ALTER TABLE camera ADD CONSTRAINT FK_3B1CEE0544F5D008 FOREIGN KEY (brand_id) REFERENCES brand (id)');
         $this->addSql('CREATE INDEX IDX_3B1CEE0544F5D008 ON camera (brand_id)');
         $this->addSql('ALTER TABLE manual DROP FOREIGN KEY FK_10DBBEC4A47890');
@@ -36,7 +36,7 @@ final class Version20240812153820 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
+        
         $this->addSql('ALTER TABLE camera DROP FOREIGN KEY FK_3B1CEE0544F5D008');
         $this->addSql('DROP INDEX IDX_3B1CEE0544F5D008 ON camera');
         $this->addSql('ALTER TABLE manual DROP FOREIGN KEY FK_10DBBEC4B47685CD');
